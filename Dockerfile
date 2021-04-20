@@ -11,7 +11,3 @@ ENV PATH /opt/conda/envs/nf-core-pgdb-1.0.0/bin:$PATH
 
 # Dump the details of the installed packages to a file for posterity
 RUN conda env export --name nf-core-pgdb-1.0.0 > nf-core-pgdb-1.0.0.yml
-
-# Instruct R processes to use these empty files instead of clashing with a local version
-RUN touch .Rprofile
-RUN touch .Renviron
