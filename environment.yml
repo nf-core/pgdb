@@ -1,15 +1,18 @@
 # You can use this file to create a conda environment for this pipeline:
 #   conda env create -f environment.yml
-name: nf-core-pgdb-1.0dev
+name: nf-core-pgdb-1.0.0
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  - conda-forge::python=3.7.3
-  - conda-forge::markdown=3.1.1
-  - conda-forge::pymdown-extensions=6.0
-  - conda-forge::pygments=2.5.2
-  # TODO nf-core: Add required software dependencies here
-  - bioconda::fastqc=0.11.8
-  - bioconda::multiqc=1.7
+  - conda-forge::python=3.9.2
+  - conda-forge::markdown=3.3.4
+  - conda-forge::pymdown-extensions=8.1.1
+  - conda-forge::pygments=2.8.1
+  # All the dependencies of the pipeline.
+  - conda-forge::coreutils=8.31
+  - conda-forge::git-lfs=2.13.3
+  - conda-forge::git=2.30.2
+  - bioconda::gffread=0.12.1
+  - bioconda::pypgatk=0.0.19

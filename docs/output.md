@@ -2,58 +2,48 @@
 
 ## Introduction
 
-This document describes the output produced by the pipeline. Most of the plots are taken from the MultiQC report, which summarises results at the end of the pipeline.
+This document describes the output produced by the pipeline. The main output of the pgdb pipeline is the protein sequence database. Protein databases are use for peptide and protein [identification algorithms](https://pubmed.ncbi.nlm.nih.gov/27975215/). In most of the proteomics experiments, researchers tried to quantified the peptides and proteins using canonical protein databases such as ENSEMBL or UNIPROT.
 
-The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
+[Proteogenomics](https://www.nature.com/articles/nmeth.3144) is the field of research at the interface of proteomics and genomics. In this approach, "customized" protein sequence databases generated using genomic and transcriptomic information are used to help identify "novel" peptides (not present in reference/canonical protein sequence databases) from mass spectrometry–based proteomic data; in turn, the proteomic data can be used to provide protein-level evidence of gene expression and to help refine gene models. In recent years, owing to the emergence of new sequencing technologies such as RNA-seq and dramatic improvements in the depth and throughput of mass spectrometry–based proteomics, the pace of proteogenomic research has greatly accelerated.
 
-<!-- TODO nf-core: Write this documentation describing your workflow's output -->
+pgdb allows researchers to create custom proteogenomic databses using different sources such as COSMIC, cBioPortal, ENSEMBL variants of gNOMAD.
 
 ## Pipeline overview
 
-The pipeline is built using [Nextflow](https://www.nextflow.io/)
-and processes data using the following steps:
+The pipeline is built using [Nextflow](https://www.nextflow.io/) and aim to create a final protein database by adding different protein sequences depending of the options provided by the user/researcher. The pipeline will handle the download from the different sources and perform the operations in the data like translation from genome and transcript sequences into protein sequences, etc.
 
-* [FastQC](#fastqc) - Read quality control
-* [MultiQC](#multiqc) - Aggregate report describing results from the whole pipeline
-* [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
+The main source of canonical protein sequence in pgdb is ENSEMBL. The user can then attach to the proteogenomic database protein vairants from COSMIC or cBioPortal. In addition, the pseudogenes, lncRNAs and other novel translation events can be configure to get novel protein sequences. The main sources of sequences are:
 
-## FastQC
+* [Ensembl](#ensembl) - Download the Ensembl databases proteins and add canonical proteins.
+* [Ensemblnoncanonical](#ensemblnoncanonical) - ENSEMBL non canonical proteins
+* [Variants](#variants) - Add the COSMIC and cPortal variant databases.
+* [Decoy](#decoys) - Add decoy proteins to the final database.
+* [Output](#output) - Output results including clean databases and decoy generation
 
-[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences.
+## Ensembl
 
-For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
+The pipeline will download the the ENSEMBL protein reference proteome, this will be added to the final protein database. The protein databae is downloaded from [ENSEMBL FTP](http://www.ensembl.org/info/data/ftp/index.html)
 
-**Output files:**
+## Ensembl non canonical
 
-* `fastqc/`
-  * `*_fastqc.html`: FastQC report containing quality metrics for your untrimmed raw fastq files.
-* `fastqc/zips/`
-  * `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+The Ensembl non canonical includes the pseudogenes, lncRNAs, etc. The accessions of each type of kind of novel protein is predefined by the [pypgatk tool](https://github.com/bigbio/py-pgatk)
 
-> **NB:** The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They may contain adapter sequence and potentially regions with low quality.
+* ncRNA_ENST00000456688 - non coding RNA transcript.
+* altorf_ENST00000310473 - alternative open reading frame
+* pseudo_ENST00000436135 - pseudo gene translation
 
-## MultiQC
+## Variants
 
-[MultiQC](http://multiqc.info) is a visualization tool that generates a single HTML report summarizing all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in the report data directory.
+The COSMIC or cBioPortal variants are downloaded automatically from these resources. The accessions of those proteins are:
 
-The pipeline has special steps which also allow the software versions to be reported in the MultiQC output for future traceability.
+* COSMIC:ANXA3_ENST00000503570:p.A67T:Substitution-Missense - Accession of the protein includes the position of the aminoacid variant.
 
-For more information about how to use MultiQC reports, see [https://multiqc.info](https://multiqc.info).
+## Decoy
 
-**Output files:**
+Decoy can be added to the final database. Decoys accessions are prefix with `DECOY_` by default, but they can be configured by the users.
 
-* `multiqc/`
-  * `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
-  * `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.
-  * `multiqc_plots/`: directory containing static images from the report in various formats.
+## Output
 
-## Pipeline information
+ /fasta_database.fa
 
-[Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
-
-**Output files:**
-
-* `pipeline_info/`
-  * Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
-  * Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.csv`.
-  * Documentation for interpretation of results in HTML format: `results_description.html`.
+The FASTA database including all the protein sequences including the reference proteomes, variants, pseudo-genes, etc.

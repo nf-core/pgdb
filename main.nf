@@ -1,9 +1,10 @@
 #!/usr/bin/env nextflow
+
 /*
 ========================================================================================
                          nf-core/pgdb
 ========================================================================================
- nf-core/pgdb Analysis Pipeline.
+ nf-core/pgdb Proteogenomics database generation
  #### Homepage / Documentation
  https://github.com/nf-core/pgdb
 ----------------------------------------------------------------------------------------
@@ -16,7 +17,7 @@ log.info Headers.nf_core(workflow, params.monochrome_logs)
 ////////////////////////////////////////////////////+
 def json_schema = "$projectDir/nextflow_schema.json"
 if (params.help) {
-    def command = "nextflow run nf-core/pgdb --input '*_R{1,2}.fastq.gz' -profile docker"
+    def command = "nextflow run nf-core/pgdb -profile docker --ensembl_name homo_sapiens"
     log.info NfcoreSchema.params_help(workflow, params, json_schema, command)
     exit 0
 }
@@ -24,29 +25,14 @@ if (params.help) {
 ////////////////////////////////////////////////////
 /* --         VALIDATE PARAMETERS              -- */
 ////////////////////////////////////////////////////+
+
 if (params.validate_params) {
     NfcoreSchema.validateParameters(params, json_schema, log)
 }
 
-////////////////////////////////////////////////////
-/* --     Collect configuration parameters     -- */
-////////////////////////////////////////////////////
-
-// Check if genome exists in the config file
-if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
-    exit 1, "The provided genome '${params.genome}' is not available in the iGenomes file. Currently the available genomes are ${params.genomes.keySet().join(', ')}"
-}
-
-// TODO nf-core: Add any reference files that are needed
-// Configurable reference genomes
-//
-// NOTE - THIS IS NOT USED IN THIS PIPELINE, EXAMPLE ONLY
-// If you want to use the channel below in a process, define the following:
-//   input:
-//   file fasta from ch_fasta
-//
-params.fasta = params.genome ? params.genomes[ params.genome ].fasta ?: false : false
-if (params.fasta) { ch_fasta = file(params.fasta, checkIfExists: true) }
+/*
+ * SET UP CONFIGURATION VARIABLES
+ */
 
 // Check AWS batch settings
 if (workflow.profile.contains('awsbatch')) {
@@ -60,34 +46,664 @@ if (workflow.profile.contains('awsbatch')) {
 }
 
 // Stage config files
-ch_multiqc_config = file("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
-ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
 ch_output_docs = file("$projectDir/docs/output.md", checkIfExists: true)
 ch_output_docs_images = file("$projectDir/docs/images/", checkIfExists: true)
+ensembl_downloader_config = file(params.ensembl_downloader_config, checkIfExists: true)
+ensembl_config = file(params.ensembl_config)
+cosmic_config = file(params.cosmic_config)
+cbioportal_config = file(params.cbioportal_config)
+protein_decoy_config = file(params.protein_decoy_config)
 
-/*
- * Create a channel for input read files
- */
-if (params.input_paths) {
-    if (params.single_end) {
-        Channel
-            .from(params.input_paths)
-            .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true) ] ] }
-            .ifEmpty { exit 1, 'params.input_paths was empty - no input files supplied' }
-            .into { ch_read_files_fastqc; ch_read_files_trimming }
-    } else {
-        Channel
-            .from(params.input_paths)
-            .map { row -> [ row[0], [ file(row[1][0], checkIfExists: true), file(row[1][1], checkIfExists: true) ] ] }
-            .ifEmpty { exit 1, 'params.input_paths was empty - no input files supplied' }
-            .into { ch_read_files_fastqc; ch_read_files_trimming }
-    }
-} else {
-    Channel
-        .fromFilePairs(params.input, size: params.single_end ? 1 : 2)
-        .ifEmpty { exit 1, "Cannot find any reads matching: ${params.input}\nNB: Path needs to be enclosed in quotes!\nIf this is single-end data, please specify --single_end on the command line." }
-        .into { ch_read_files_fastqc; ch_read_files_trimming }
+params.cbioportal_study_id = "all"
+
+af_field = params.af_field
+ensembl_af_field = params.af_field
+if (params.ensembl_name == "homo_sapiens"){
+	ensembl_af_field = "MAF"
 }
+
+// Pipeline checks
+if ((params.cosmic || params.cosmic_celllines) && (params.cosmic_user_name=="" || params.cosmic_password=="")){
+	exit 1, "User name and password has to be provided. In order to be able to download COSMIC data. Please first register in COSMIC database (https://cancer.sanger.ac.uk/cosmic/register)."
+}
+
+// Pipeline OS-specific commands
+ZCAT = (System.properties['os.name'] == 'Mac OS X' ? 'gzcat' : 'zcat')
+
+
+/**
+ * Download data from ensembl for the particular species.
+ */
+process ensembl_fasta_download{
+
+   when:
+   params.add_reference ||  params.ensembl || params.altorfs || params.ncrna || params.pseudogenes || params.vcf
+
+   input:
+   file ensembl_downloader_config
+
+   output:
+   file 'database_ensembl/*.pep.all.fa' into ensembl_protein_database_sub
+   file 'database_ensembl/*cdna.all.fa' into ensembl_cdna_database, ensembl_cdna_database_sub
+   file 'database_ensembl/*ncrna.fa' into ensembl_ncrna_database, ensembl_ncrna_database_sub
+   file 'database_ensembl/*.dna*.fa' into genome_fasta
+   file 'database_ensembl/*.gtf' into gtf
+
+   script:
+   """
+   pypgatk_cli.py ensembl-downloader --config_file ${ensembl_downloader_config} --ensembl_name ${params.ensembl_name} \\
+                  -sv -sc
+   """
+}
+
+process add_reference_proteome{
+
+   when:
+   params.add_reference
+
+   input:
+   file reference_proteome from ensembl_protein_database_sub
+
+   output:
+   file 'reference_proteome.fa' into ensembl_protein_database
+
+   script:
+   """
+   cat ${reference_proteome} >> reference_proteome.fa
+   """
+
+}
+
+/**
+ * Concatenate cDNA and ncRNA databases
+ **/
+process merge_cdnas{
+
+   input:
+   file a from ensembl_cdna_database_sub.collect()
+   file b from ensembl_ncrna_database_sub.collect()
+
+   output:
+   file 'total_cdnas.fa' into total_cdnas
+
+   script:
+   """
+   cat ${a} >> total_cdnas.fa
+   cat ${b} >> total_cdnas.fa
+   """
+}
+
+/**
+ * Creates the ncRNA protein database
+ */
+process add_ncrna{
+
+   publishDir "${params.outdir}", mode: 'copy', overwrite: true
+
+   when:
+   params.ncrna
+
+   input:
+   file x from total_cdnas
+   file ensembl_config
+
+   output:
+   file 'ncRNAs_proteinDB.fa' into optional_ncrna
+
+   script:
+   """
+   pypgatk_cli.py dnaseq-to-proteindb --config_file "${ensembl_config}" --input_fasta ${x} \\
+                  --output_proteindb ncRNAs_proteinDB.fa --include_biotypes "${params.biotypes['ncRNA']}" \\
+                  --skip_including_all_cds --var_prefix ncRNA_
+   """
+}
+
+merged_databases = ensembl_protein_database.mix(optional_ncrna)
+
+/**
+ * Creates the pseudogenes protein database
+ */
+process add_pseudogenes {
+
+   publishDir "${params.outdir}", mode: 'copy', overwrite: true
+
+   when:
+   params.pseudogenes
+
+   input:
+   file x from total_cdnas
+   file ensembl_config
+
+   output:
+   file 'pseudogenes_proteinDB.fa' into optional_pseudogenes
+
+   script:
+   """
+   pypgatk_cli.py dnaseq-to-proteindb --config_file "${ensembl_config}" --input_fasta "${x}" \\
+                  --output_proteindb pseudogenes_proteinDB.fa --include_biotypes "${params.biotypes['pseudogene']}" \\
+                  --skip_including_all_cds --var_prefix pseudo_
+   """
+}
+
+merged_databases = merged_databases.mix(optional_pseudogenes)
+
+/**
+ * Creates the altORFs protein database
+ */
+process add_altorfs {
+
+   publishDir "${params.outdir}", mode: 'copy', overwrite: true
+
+   when:
+   params.altorfs
+
+   input:
+   file x from ensembl_cdna_database
+   file ensembl_config
+
+   output:
+   file('altorfs_proteinDB.fa') into optional_altorfs
+
+   script:
+   """
+   pypgatk_cli.py dnaseq-to-proteindb --config_file "${ensembl_config}" --input_fasta "${x}" \\
+                  --output_proteindb altorfs_proteinDB.fa --include_biotypes "${params.biotypes['protein_coding']}'" \\
+                  --skip_including_all_cds --var_prefix altorf_
+   """
+}
+
+merged_databases = merged_databases.mix(optional_altorfs)
+
+/* Mutations to proteinDB */
+
+/**
+ * Download COSMIC Mutations
+ */
+process cosmic_download {
+
+	  when:
+  	  params.cosmic || params.cosmic_celllines
+
+	  input:
+	  file cosmic_config
+
+	  output:
+    file "database_cosmic/All_COSMIC_Genes.fasta" into cosmic_genes
+    file "database_cosmic/CosmicMutantExport.tsv" into cosmic_mutations
+    file "database_cosmic/All_CellLines_Genes.fasta" into cosmic_celllines_genes
+    file "database_cosmic/CosmicCLP_MutantExport.tsv" into cosmic_celllines_mutations
+
+	  script:
+	  """
+	  pypgatk_cli.py cosmic-downloader --config_file "${cosmic_config}" --username ${params.cosmic_user_name} \\
+	                 --password ${params.cosmic_password}
+	  """
+}
+
+/**
+ * Generate proteindb from cosmic mutations
+*/
+process cosmic_proteindb{
+
+	  publishDir "${params.outdir}", mode: 'copy', overwrite: true
+
+	  when:
+  	  params.cosmic
+
+	  input:
+	  file g from cosmic_genes
+	  file m from cosmic_mutations
+	  file cosmic_config
+
+	  output:
+	  file 'cosmic_proteinDB*.fa' into cosmic_proteindbs
+
+	  script:
+	  """
+	  pypgatk_cli.py cosmic-to-proteindb --config_file "${cosmic_config}" --input_mutation ${m} --input_genes ${g} \\
+	                 --filter_column 'Histology subtype 1' --accepted_values ${params.cosmic_cancer_type} \\
+	                 --output_db cosmic_proteinDB.fa
+	  """
+}
+
+merged_databases = merged_databases.mix(cosmic_proteindbs)
+
+/**
+ * Generate proteindb from cosmic cell lines mutations
+*/
+process cosmic_celllines_proteindb{
+
+	  publishDir "${params.outdir}", mode: 'copy', overwrite: true
+
+	  when:
+  	  params.cosmic_celllines
+
+	  input:
+	  file g from cosmic_celllines_genes
+	  file m from cosmic_celllines_mutations
+	  file cosmic_config
+
+	  output:
+	  file 'cosmic_celllines_proteinDB*.fa' into cosmic_celllines_proteindbs
+
+	  script:
+	  """
+	  pypgatk_cli.py cosmic-to-proteindb --config_file "${cosmic_config}" --input_mutation ${m} --input_genes ${g} \\
+	                 --filter_column 'Sample name' --accepted_values ${params.cosmic_cellline_name} \\
+	                 --output_db cosmic_celllines_proteinDB.fa
+	  """
+}
+
+merged_databases = merged_databases.mix(cosmic_celllines_proteindbs)
+
+/**
+ * Download VCF files from ensembl for the particular species.
+ */
+process ensembl_vcf_download{
+
+   when:
+    params.ensembl
+
+   input:
+   file ensembl_downloader_config
+
+   output:
+   file "database_ensembl/*.vcf" into ensembl_vcf_files
+
+   script:
+   """
+   pypgatk_cli.py ensembl-downloader --config_file ${ensembl_downloader_config} \\
+                  --ensembl_name ${params.ensembl_name} -sg -sp -sc -sd -sn
+   """
+}
+
+process check_ensembl_vcf{
+
+   label 'process_medium'
+   label 'process_single_thread'
+
+   when:
+   params.ensembl
+
+   input:
+   file vcf_file from ensembl_vcf_files
+
+   output:
+   file "checked_*.vcf" into ensembl_vcf_files_checked
+
+   script:
+   """
+   awk 'BEGIN{FS=OFS="\t"}{if(\$1~"#" || (\$5!="" && \$4!="")) print}' $vcf_file > checked_$vcf_file
+   """
+}
+
+/**
+ * Generate protein database(s) from ENSEMBL vcf file(s)
+ */
+process ensembl_vcf_proteinDB {
+
+   label 'process_medium'
+   label 'process_single_thread'
+
+   when:
+   params.ensembl
+
+   input:
+   file v from ensembl_vcf_files_checked
+   file f from total_cdnas
+   file g from gtf
+   file e from ensembl_config
+
+   output:
+   file "${v}_proteinDB.fa" into proteinDB_vcf
+
+   script:
+   """
+   pypgatk_cli.py vcf-to-proteindb --config_file ${e} --af_field "${ensembl_af_field}" --input_fasta ${f} \\
+                  --gene_annotations_gtf ${g} --vcf ${v} --output_proteindb "${v}_proteinDB.fa"  \\
+                  --var_prefix ensvar --annotation_field_name 'CSQ'
+   """
+}
+
+//concatenate all ensembl proteindbs into one
+proteinDB_vcf
+	.collectFile(name: 'ensembl_proteindb.fa', newLine: false, storeDir: "${baseDir}/result")
+	.set {proteinDB_vcf_final}
+
+merged_databases = merged_databases.mix(proteinDB_vcf_final)
+
+/****** Custom VCF      *****/
+/**
+ * Generate protein databse for a given VCF
+ */
+process gtf_to_fasta {
+
+   when:
+   params.vcf
+
+   input:
+   file g from gtf
+   file f from genome_fasta
+
+   output:
+   file "transcripts.fa" into gtf_transcripts_fasta
+
+   script:
+   """
+   gffread -w transcripts.fa -g ${f} ${g}
+   """
+}
+
+//vcf_file = Channel.fromPath(params.vcf_file)
+vcf_file = params.vcf_file ? Channel.fromPath(params.vcf_file, checkIfExists: true) : Channel.empty()
+
+process vcf_proteinDB {
+
+   publishDir "${params.outdir}", mode: 'copy', overwrite: true
+
+   when:
+   params.vcf
+
+   input:
+   file v from vcf_file
+   file f from gtf_transcripts_fasta
+   file g from gtf
+   file e from ensembl_config
+
+   output:
+   file "*_proteinDB.fa" into proteinDB_custom_vcf
+
+   script:
+   """
+   awk 'BEGIN{FS=OFS="\t"}{if(\$1=="chrM") \$1="MT"; gsub("chr","",\$1); print}' \\
+       ${v} > ${v.baseName}_changedChrNames.vcf
+   pypgatk_cli.py vcf-to-proteindb --config_file ${e} --af_field "${af_field}" --input_fasta ${f} \\
+                  --gene_annotations_gtf ${g} --vcf ${v.baseName}_changedChrNames.vcf \\
+                  --output_proteindb ${v.baseName}_proteinDB.fa --annotation_field_name ''
+   """
+}
+
+merged_databases = merged_databases.mix(proteinDB_custom_vcf)
+
+
+/****** gnomAD variatns *****/
+
+/**
+ * Download gencode files (fasta and gtf)
+ */
+process gencode_download{
+
+   when:
+	  params.gnomad
+
+   input:
+	 val g from params.gencode_url
+
+   output:
+	 file("gencode.v19.pc_transcripts.fa") into gencode_fasta
+	 file("gencode.v19.annotation.gtf") into gencode_gtf
+
+   script:
+	 """
+	 wget ${g}/gencode.v19.pc_transcripts.fa.gz
+	 wget ${g}/gencode.v19.annotation.gtf.gz
+	 gunzip *.gz
+	 """
+}
+
+/**
+ * Download gnomAD variants (VCF) - requires gsutil
+ */
+process gnomad_download{
+
+   when:
+	  params.gnomad
+
+   input:
+	 val g from params.gnomad_file_url
+
+   output:
+   file "*.vcf.bgz" into gnomad_vcf_bgz
+
+   script:
+   """
+   gsutil cp ${g} .
+   """
+}
+
+/**
+ * Extract gnomAD VCF
+ */
+process extract_gnomad_vcf{
+
+   when:
+   params.gnomad
+
+   input:
+   file g from gnomad_vcf_bgz.flatten().map{ file(it) }
+
+   output:
+   file "*.vcf" into gnomad_vcf_files
+
+   script:
+   """
+   zcat ${g} > ${g}.vcf
+   """
+}
+
+/**
+ * Generate gmomAD proteinDB
+ */
+process gnomad_proteindb{
+
+   when:
+   params.gnomad
+
+   input:
+   file v from gnomad_vcf_files
+   file f from gencode_fasta
+   file g from gencode_gtf
+   file e from ensembl_config
+
+   output:
+   file "${v}_proteinDB.fa" into gnomad_vcf_proteindb
+
+   script:
+   """
+   pypgatk_cli.py vcf-to-proteindb --config_file ${e} --vcf ${v} --input_fasta ${f} --gene_annotations_gtf ${g} \\
+                  --output_proteindb "${v}_proteinDB.fa" --af_field controls_AF --transcript_index 6 \\
+                  --annotation_field_name vep  --var_prefix gnomadvar
+   """
+}
+
+//concatenate all gnomad proteindbs into one
+gnomad_vcf_proteindb
+	.collectFile(name: 'gnomad_proteindb.fa', newLine: false, storeDir: "${baseDir}/result")
+	.set {gnomad_vcf_proteindb_final}
+
+merged_databases = merged_databases.mix(gnomad_vcf_proteindb_final)
+
+/****** cBioPortal mutations *****/
+/**
+ * Download GRCh37 CDS file from ENSEMBL release 75
+ */
+process cds_GRCh37_download{
+
+   when:
+   params.cbioportal
+
+   output:
+   file("Homo_sapiens.GRCh37.75.cds.all.fa") into ch_GRCh37_cds
+
+   script:
+   """
+   wget ftp://ftp.ensembl.org/pub/release-75/fasta/homo_sapiens/cds/Homo_sapiens.GRCh37.75.cds.all.fa.gz
+   gunzip *.gz
+   """
+}
+
+/**
+ * Download all cBioPortal studies using git-lfs
+*/
+ process download_all_cbioportal {
+
+    when:
+         params.cbioportal
+
+   output:
+ 	 file('cbioportal_allstudies_data_mutations_mskcc.txt') into cbio_mutations
+ 	 file('cbioportal_allstudies_data_clinical_sample.txt') into cbio_samples
+
+   script:
+   if (params.cbioportal_study_id == "all")
+        """
+        git clone https://github.com/cBioPortal/datahub.git
+        cd datahub
+        git lfs install --local --skip-smudge
+        git lfs pull -I public --include "data*clinical*sample.txt"
+        git lfs pull -I public --include "data_mutations_mskcc.txt"
+        cd ..
+        cat datahub/public/*/data_mutations_mskcc.txt > cbioportal_allstudies_data_mutations_mskcc.txt
+        cat datahub/public/*/*data*clinical*sample.txt | \\
+            awk 'BEGIN{FS=OFS="\\t"}{if(\$1!~"#SAMPLE_ID"){gsub("#SAMPLE_ID", "\\nSAMPLE_ID");} print}' | \\
+            awk 'BEGIN{FS=OFS="\\t"}{s=0; j=0; \\
+            for(i=1;i<=NF;i++){ \\
+               if(\$i=="CANCER_TYPE_DETAILED") j=1; \\
+               if(\$i=="CANCER_TYPE") s=1;} \\
+            if(j==1 && s==0){ \\
+              gsub("CANCER_TYPE_DETAILED", "CANCER_TYPE");} print;}' \\
+            > cbioportal_allstudies_data_clinical_sample.txt
+        """
+    else
+        """
+        pypgatk_cli.py cbioportal-downloader --config_file "${cbioportal_config}" -d "${params.cbioportal_study_id}"
+        tar -xzvf database_cbioportal/${params.cbioportal_study_id}.tar.gz
+        cat ${params.cbioportal_study_id}/data_mutations_mskcc.txt > cbioportal_allstudies_data_mutations_mskcc.txt
+        cat ${params.cbioportal_study_id}/data_clinical_sample.txt | \\
+            awk 'BEGIN{FS=OFS="\\t"}{if(\$1!~"#SAMPLE_ID"){gsub("#SAMPLE_ID", "\\nSAMPLE_ID");} print}' | \\
+            awk 'BEGIN{FS=OFS="\\t"}{s=0; j=0; \\
+            for(i=1;i<=NF;i++){ \\
+               if(\$i=="CANCER_TYPE_DETAILED") j=1; if(\$i=="CANCER_TYPE") s=1;} \\
+            if(j==1 && s==0){gsub("CANCER_TYPE_DETAILED", "CANCER_TYPE");} print;}' \\
+            > cbioportal_allstudies_data_clinical_sample.txt
+        """
+ }
+
+/**
+ * Generate proteinDB from cBioPortal mutations
+ */
+ process cbioportal_proteindb{
+
+   publishDir "${params.outdir}", mode: 'copy', overwrite: true
+
+   when:
+   params.cbioportal
+
+   input:
+   file g from ch_GRCh37_cds
+   file m from cbio_mutations
+   file s from cbio_samples
+   file cbioportal_config
+
+   output:
+   file 'cbioPortal_proteinDB*.fa' into cBioportal_proteindb
+
+   script:
+   """
+   pypgatk_cli.py cbioportal-to-proteindb --config_file ${cbioportal_config} --input_mutation ${m} --input_cds ${g} \\
+                  --clinical_sample_file ${s} --filter_column ${params.cbioportal_filter_column} \\
+                  --accepted_values ${params.cbioportal_accepted_values} --output_db cbioPortal_proteinDB.fa
+   """
+}
+
+merged_databases = merged_databases.mix(cBioportal_proteindb)
+
+/**
+ * Concatenate all generated databases from merged_databases channel to the final_database_protein file
+ */
+process merge_proteindbs {
+
+   publishDir "${params.outdir}", mode: 'copy', overwrite: true
+
+   input:
+   file("proteindb*") from merged_databases.collect()
+
+   output:
+   file 'merged_databases.fa' into to_clean_ch
+
+   script:
+   """
+   cat proteindb* > merged_databases.fa
+   """
+}
+
+stop_codons = ''
+if (params.add_stop_codons){
+	stop_codons = "--add_stop_codons"
+}
+
+/**
+ * clean the database for stop codons, and unwanted AA like: *, also remove proteins with less than 6 AA
+ */
+process clean_protein_database {
+
+   publishDir "${params.outdir}", mode: 'copy', overwrite: true
+
+   when:
+     params.clean_database
+
+   input:
+   file file from to_clean_ch
+   file e from ensembl_config
+
+   output:
+   file 'database_clean.fa' into clean_database_sh
+
+   script:
+   """
+   pypgatk_cli.py ensembl-check -in "${file}" --config_file "${e}" -out database_clean.fa \\
+                  --num_aa "${params.minimum_aa}" "${stop_codons}"
+   """
+}
+
+to_protein_decoy_ch = params.clean_database ? clean_database_sh : to_clean_ch
+
+/**
+ * Create the decoy database using DecoyPYrat
+ * Decoy sequences will have "DECOY_" prefix tag to the protein accession.
+ */
+process decoy {
+
+   publishDir "${params.outdir}", mode: 'copy', overwrite: true
+
+   when:
+    params.decoy
+
+   input:
+   file f from to_protein_decoy_ch
+   file protein_decoy_config
+
+   output:
+   file 'decoy_database.fa' into fasta_decoy_db_ch
+
+   script:
+   """
+   pypgatk_cli.py generate-decoy --method "${params.decoy_method}" --enzyme "${params.decoy_enzyme}" \\
+                  --config_file ${protein_decoy_config} --input_database $f --decoy_prefix "${params.decoy_prefix}" \\
+                  --output_database decoy_database.fa
+   """
+}
+
+result_database_ch = params.decoy ? fasta_decoy_db_ch: to_protein_decoy_ch
+
+/** Write the final results to S3 bucket**/
+
+result_database_ch.subscribe { results -> results.copyTo("${params.outdir}/${params.final_database_protein}")}
+
+
+//--------------------------------------------------------------- //
+//---------------------- Nextflow specifics --------------------- //
+//--------------------------------------------------------------- //
 
 ////////////////////////////////////////////////////
 /* --         PRINT PARAMETER SUMMARY          -- */
@@ -97,11 +713,7 @@ log.info NfcoreSchema.params_summary_log(workflow, params, json_schema)
 // Header log info
 def summary = [:]
 if (workflow.revision) summary['Pipeline Release'] = workflow.revision
-summary['Run Name']         = workflow.runName
-// TODO nf-core: Report custom parameters here
-summary['Input']            = params.input
-summary['Fasta Ref']        = params.fasta
-summary['Data Type']        = params.single_end ? 'Single-End' : 'Paired-End'
+summary['Run Name']         = custom_runName ?: workflow.runName
 summary['Max Resources']    = "$params.max_memory memory, $params.max_cpus cpus, $params.max_time time per job"
 if (workflow.containerEngine) summary['Container'] = "$workflow.containerEngine - $workflow.container"
 summary['Output dir']       = params.outdir
@@ -122,7 +734,6 @@ summary['Config Files'] = workflow.configFiles.join(', ')
 if (params.email || params.email_on_fail) {
     summary['E-mail Address']    = params.email
     summary['E-mail on failure'] = params.email_on_fail
-    summary['MultiQC maxsize']   = params.max_multiqc_email_size
 }
 
 // Check the hostnames against configured profiles
@@ -159,69 +770,10 @@ process get_software_versions {
     file 'software_versions.csv'
 
     script:
-    // TODO nf-core: Get all tools to print their version number here
     """
     echo $workflow.manifest.version > v_pipeline.txt
     echo $workflow.nextflow.version > v_nextflow.txt
-    fastqc --version > v_fastqc.txt
-    multiqc --version > v_multiqc.txt
     scrape_software_versions.py &> software_versions_mqc.yaml
-    """
-}
-
-/*
- * STEP 1 - FastQC
- */
-process fastqc {
-    tag "$name"
-    label 'process_medium'
-    publishDir "${params.outdir}/fastqc", mode: params.publish_dir_mode,
-        saveAs: { filename ->
-                      filename.indexOf('.zip') > 0 ? "zips/$filename" : "$filename"
-        }
-
-    input:
-    set val(name), file(reads) from ch_read_files_fastqc
-
-    output:
-    file '*_fastqc.{zip,html}' into ch_fastqc_results
-
-    script:
-    """
-    fastqc --quiet --threads $task.cpus $reads
-    """
-}
-
-/*
- * STEP 2 - MultiQC
- */
-process multiqc {
-    publishDir "${params.outdir}/MultiQC", mode: params.publish_dir_mode
-
-    input:
-    file (multiqc_config) from ch_multiqc_config
-    file (mqc_custom_config) from ch_multiqc_custom_config.collect().ifEmpty([])
-    // TODO nf-core: Add in log files from your new processes for MultiQC to find!
-    file ('fastqc/*') from ch_fastqc_results.collect().ifEmpty([])
-    file ('software_versions/*') from ch_software_versions_yaml.collect()
-    file workflow_summary from ch_workflow_summary.collectFile(name: "workflow_summary_mqc.yaml")
-
-    output:
-    file "*multiqc_report.html" into ch_multiqc_report
-    file "*_data"
-    file "multiqc_plots"
-
-    script:
-    rtitle = ''
-    rfilename = ''
-    if (!(workflow.runName ==~ /[a-z]+_[a-z]+/)) {
-        rtitle = "--title \"${workflow.runName}\""
-        rfilename = "--filename " + workflow.runName.replaceAll('\\W','_').replaceAll('_+','_') + "_multiqc_report"
-    }
-    custom_config_file = params.multiqc_config ? "--config $mqc_custom_config" : ''
-    // TODO nf-core: Specify which MultiQC modules to use with -m for a faster run time
-    """
-    multiqc -f $rtitle $rfilename $custom_config_file .
     """
 }
 
@@ -229,6 +781,7 @@ process multiqc {
  * STEP 3 - Output Description HTML
  */
 process output_documentation {
+
     publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode
 
     input:
@@ -276,21 +829,6 @@ workflow.onComplete {
     email_fields['summary']['Nextflow Version'] = workflow.nextflow.version
     email_fields['summary']['Nextflow Build'] = workflow.nextflow.build
     email_fields['summary']['Nextflow Compile Timestamp'] = workflow.nextflow.timestamp
-
-    // TODO nf-core: If not using MultiQC, strip out this code (including params.max_multiqc_email_size)
-    // On success try attach the multiqc report
-    def mqc_report = null
-    try {
-        if (workflow.success) {
-            mqc_report = ch_multiqc_report.getVal()
-            if (mqc_report.getClass() == ArrayList) {
-                log.warn "[nf-core/pgdb] Found multiple reports from process 'multiqc', will use only one"
-                mqc_report = mqc_report[0]
-            }
-        }
-    } catch (all) {
-        log.warn "[nf-core/pgdb] Could not attach MultiQC report to summary email"
-    }
 
     // Check if we are only sending emails on failure
     email_address = params.email

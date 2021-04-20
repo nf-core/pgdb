@@ -1,0 +1,216 @@
+Aardvark,Orycteropus afer afer,1230840
+Abingdon island giant tortoise,Chelonoidis abingdonii,106734
+Agassiz's desert tortoise,Gopherus agassizii,38772
+Algerian mouse,Mus spretus,10096
+Alpaca,Vicugna pacos,30538
+Alpine marmot,Marmota marmota marmota,9994
+Amazon molly,Poecilia formosa,48698
+American beaver,Castor canadensis,51338
+American bison,Bison bison bison,43346
+American black bear,Ursus americanus,9643
+American mink,Neovison vison,452646
+Angola colobus,Colobus angolensis palliatus,336983
+Anole lizard,Anolis carolinensis,28377
+Arctic ground squirrel,Urocitellus parryii,9999
+Argentine black and white tegu,Salvator merianae,96440
+Armadillo,Dasypus novemcinctus,9361
+Asian bonytongue,Scleropages formosus,113540
+Australian saltwater crocodile,Crocodylus porosus,8502
+Ballan wrasse,Labrus bergylta,56723
+Barramundi perch,Lates calcarifer,8187
+Bengalese finch,Lonchura striata domestica,299123
+Bicolor damselfish,Stegastes partitus,144197
+Black snub-nosed monkey,Rhinopithecus bieti,61621
+Blue tit,Cyanistes caeruleus,156563
+Blue-crowned manakin,Lepidothrix coronata,321398
+Bolivian squirrel monkey,Saimiri boliviensis boliviensis,39432
+Bonobo,Pan paniscus,9597
+Brazilian guinea pig,Cavia aperea,37548
+Budgerigar,Melopsittacus undulatus,13146
+Burton's mouthbrooder,Haplochromis burtoni,8153
+Bushbaby,Otolemur garnettii,30611
+C.intestinalis,Ciona intestinalis,7719
+C.savignyi,Ciona savignyi,51511
+C. elegans,Caenorhabditis elegans,6239
+Capuchin,Cebus capucinus imitator,1737458
+Cat,Felis catus,9685
+Central bearded dragon,Pogona vitticeps,103695
+Channel catfish,Ictalurus punctatus,7998
+Chicken,Gallus gallus,9031
+Chilean tinamou,Nothoprocta perdicaria,30464
+Chimpanzee,Pan troglodytes,9598
+Chinese hamster CHOK1GS,Cricetulus griseus,10029
+Chinese hamster CriGri,Cricetulus griseus,10029
+Chinese hamster PICR,Cricetulus griseus,10029
+Chinese softshell turtle,Pelodiscus sinensis,13735
+Climbing perch,Anabas testudineus,64144
+Clown anemonefish,Amphiprion ocellaris,80972
+Cod,Gadus morhua,8049
+Coelacanth,Latimeria chalumnae,7897
+Common canary,Serinus canaria,9135
+Common wombat,Vombatus ursinus,29139
+Coquerel's sifaka,Propithecus coquereli,379532
+Cow,Bos taurus,9913
+Crab-eating macaque,Macaca fascicularis,9541
+Damara mole rat,Fukomys damarensis,885580
+Dark-eyed junco,Junco hyemalis,40217
+Daurian ground squirrel,Spermophilus dauricus,99837
+Degu,Octodon degus,10160
+Dingo,Canis lupus dingo,286419
+Dog,Canis lupus familiaris,9615
+Dolphin,Tursiops truncatus,9739
+Dolphin,Tursiops truncatus,9739
+Donkey,Equus asinus asinus,83772
+Drill,Mandrillus leucophaeus,9568
+D. melanogaster,Drosophila melanogaster,7227
+Duck,Anas platyrhynchos platyrhynchos,8840
+Eastern happy,Astatotilapia calliptera,8154
+Electric eel,Electrophorus electricus,8005
+Elephant,Loxodonta africana,9785
+Elephant shark,Callorhinchus milii,7868
+Emu,Dromaius novaehollandiae,8790
+Ferret,Mustela putorius furo,9669
+Flycatcher,Ficedula albicollis,59894
+Fugu,Takifugu rubripes,31033
+Gelada,Theropithecus gelada,9565
+Gibbon,Nomascus leucogenys,61853
+Goat,Capra hircus,9925
+Golden Hamster,Mesocricetus auratus,10036
+Golden snub-nosed monkey,Rhinopithecus roxellana,61622
+Golden-collared manakin,Manacus vitellinus,328815
+Gorilla,Gorilla gorilla gorilla,9595
+Great Tit,Parus major,9157
+Great spotted kiwi,Apteryx haastii,8823
+Greater amberjack,Seriola dumerili,41447
+Greater bamboo lemur,Prolemur simus,1328070
+Guinea Pig,Cavia porcellus,10141
+Guppy,Poecilia reticulata,8081
+Hagfish,Eptatretus burgeri,7764
+Hamadryas Baboon,Papio hamadryas,9557
+Hedgehog,Erinaceus europaeus,9365
+Hedgehog,Erinaceus europaeus,9365
+Helmeted guineafowl,Numida meleagris,8996
+Horse,Equus caballus,9796
+Huchen,Hucho hucho,62062
+Human,Homo sapiens,9606
+Hybrid - Bos Indicus,Bos indicus x Bos taurus,30522
+Hybrid - Bos Taurus,Bos indicus x Bos taurus,30522
+Hyrax,Procavia capensis,9813
+Indian medaka,Oryzias melastigma,30732
+Japanese medaka HNI,Oryzias latipes,8090
+Japanese medaka HSOK,Oryzias latipes,8090
+Japanese medaka HdrR,Oryzias latipes,8090
+Japanese quail,Coturnix japonica,93934
+Kangaroo rat,Dipodomys ordii,10020
+Koala,Phascolarctos cinereus,38626
+Lamprey,Petromyzon marinus,7757
+Leopard,Panthera pardus,9691
+Lesser Egyptian jerboa,Jaculus jaculus,51337
+Lesser hedgehog tenrec,Echinops telfairi,9371
+Little spotted kiwi,Apteryx owenii,8824
+Long-tailed chinchilla,Chinchilla lanigera,34839
+Lyretail cichlid,Neolamprologus brichardi,32507
+Ma's night monkey,Aotus nancymaae,37293
+Macaque,Macaca mulatta,9544
+Mainland tiger snake,Notechis scutatus,8663
+Makobe Island cichlid,Pundamilia nyererei,303518
+Mangrove rivulus,Kryptolebias marmoratus,37003
+Marmoset,Callithrix jacchus,9483
+Megabat,Pteropus vampyrus,132908
+Mexican tetra,Astyanax mexicanus,7994
+Microbat,Myotis lucifugus,59463
+Midas cichlid,Amphilophus citrinellus,61819
+Mongolian gerbil,Meriones unguiculatus,10047
+Monterrey platyfish,Xiphophorus couchianus,32473
+Mouse,Mus musculus,10090
+Mouse 129S1/SvImJ,Mus musculus,10090
+Mouse A/J,Mus musculus,10090
+Mouse AKR/J,Mus musculus,10090
+Mouse BALB/cJ,Mus musculus,10090
+Mouse C3H/HeJ,Mus musculus,10090
+Mouse C57BL/6NJ,Mus musculus,10090
+Mouse CAST/EiJ,Mus musculus castaneus,10091
+Mouse CBA/J,Mus musculus,10090
+Mouse DBA/2J,Mus musculus,10090
+Mouse FVB/NJ,Mus musculus,10090
+Mouse LP/J,Mus musculus,10090
+Mouse Lemur,Microcebus murinus,30608
+Mouse NOD/ShiLtJ,Mus musculus,10090
+Mouse NZO/HlLtJ,Mus musculus,10090
+Mouse PWK/PhJ,Mus musculus musculus,39442
+Mouse WSB/EiJ,Mus musculus domesticus,10092
+Mummichog,Fundulus heteroclitus,8078
+Naked mole-rat female,Heterocephalus glaber,10181
+Naked mole-rat male,Heterocephalus glaber,10181
+Northern American deer mouse,Peromyscus maniculatus bairdii,230844
+Northern pike,Esox lucius,8010
+Ocean sunfish,Mola mola,94237
+Okarito brown kiwi,Apteryx rowi,308060
+Olive baboon,Papio anubis,9555
+Opossum,Monodelphis domestica,13616
+Orange clownfish,Amphiprion percula,161767
+Orangutan,Pongo abelii,9601
+Painted turtle,Chrysemys picta bellii,8478
+Panda,Ailuropoda melanoleuca,9646
+P. kingsleyae,Paramormyrops kingsleyae,1676925
+P. magnuspinnatus,Periophthalmus magnuspinnatus,409849
+Pig,Sus scrofa,9823
+Pig FPC map,Sus scrofa map,
+Pig USMARC,Sus scrofa,9823
+Pig-tailed macaque,Macaca nemestrina,9545
+Pika,Ochotona princeps,9978
+Pika,Ochotona princeps,9978
+Pink-footed goose,Anser brachyrhynchus,132585
+Platyfish,Xiphophorus maculatus,8083
+Platypus,Ornithorhynchus anatinus,9258
+Polar bear,Ursus maritimus,29073
+Prairie vole,Microtus ochrogaster,79684
+Rabbit,Oryctolagus cuniculus,9986
+Rat,Rattus norvegicus,10116
+Red fox,Vulpes vulpes,9627
+Red-bellied piranha,Pygocentrus nattereri,42514
+Rhinoceros,Ceratotherium simum simum,73337
+Ruff,Calidris pugnax,198806
+Ryukyu mouse,Mus caroli,10089
+S. cerevisiae,Saccharomyces cerevisiae,4932
+Sailfin molly,Poecilia latipinna,48699
+Sheep,Ovis aries,9940
+Sheepshead minnow,Cyprinodon variegatus,28743
+Shortfin molly,Poecilia mexicana,48701
+Shrew,Sorex araneus,42254
+Shrew,Sorex araneus,42254
+Shrew mouse,Mus pahari,10093
+Sloth,Choloepus hoffmanni,9358
+Sooty mangabey,Cercocebus atys,9531
+Sperm whale,Physter macrocephalus,9755
+Spiny chromis,Acanthochromis polyacanthus,80966
+Spoon-billed sandpiper,Calidris pygmaea,425635
+Spotted gar,Lepisosteus oculatus,7918
+Squirrel,Ictidomys tridecemlineatus,43179
+Steppe mouse,Mus spicilegus,10103
+Stickleback,Gasterosteus aculeatus,69293
+Swamp eel,Monopterus albus,43700
+Tarsier,Carlito syrichta,1868482
+Tasmanian devil,Sarcophilus harrisii,9305
+Tetraodon,Tetraodon nigroviridis,99883
+Tiger,Panthera tigris altaica,74533
+Tiger tail seahorse,Hippocampus comes,109280
+Tilapia,Oreochromis niloticus,8128
+Tongue sole,Cynoglossus semilaevis,244447
+Tree Shrew,Tupaia belangeri,37347
+Tuatara,Sphenodon punctatus,8508
+Turbot,Scophthalmus maximus,52904
+Turkey,Meleagris gallopavo,9103
+Ugandan red Colobus,Piliocolobus tephrosceles,591936
+Upper Galilee mountains blind mole rat,Nannospalax galili,1026970
+Vervet-AGM,Chlorocebus sabaeus,60711
+Wallaby,Notamacropus eugenii,9315
+Western mosquitofish,Gambusia affinis,33528
+White-throated sparrow,Zonotrichia albicollis,44394
+Wild yak,Bos mutus,72004
+Xenopus,Xenopus tropicalis,8364
+Yellowtail amberjack,Seriola lalandi dorsalis,1841481
+Zebra Finch,Taeniopygia guttata,59729
+Zebra mbuna,Maylandia zebra,106582
+Zebrafish,Danio rerio,7955
+Zig-zag eel,Mastacembelus armatus,205130
