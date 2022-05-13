@@ -145,7 +145,24 @@
                     "type": "string",
                     "default": "all",
                     "description": "Specify a sample name to limit the COSMIC cell line mutations to a particular  cell line"
+                },
+                "cosmicgenes": {
+                    "type": "string",
+                    "description": "Loading local cosmic protein database"
+                },
+                "cosmicmutations": {
+                    "type": "string",
+                    "description": "Loading local COSMIC mutation files"
+                },
+                "cosmiccelllines_genes": {
+                    "type": "string",
+                    "description": "Loading local cosmic_celllines protein database"
+                },
+                "cosmiccelllines_mutations": {
+                    "type": "string",
+                    "description": "Loading local COSMIC cell line files"
                 }
+                
             }
         },
         "gnomad_variant_proteomes": {

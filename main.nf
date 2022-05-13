@@ -51,6 +51,14 @@ ch_output_docs_images = file("$projectDir/docs/images/", checkIfExists: true)
 ensembl_downloader_config = file(params.ensembl_downloader_config, checkIfExists: true)
 ensembl_config = file(params.ensembl_config)
 cosmic_config = file(params.cosmic_config)
+if (params.cosmicgenes&&params.cosmicmutations) {
+    cosmicgenes = file(params.cosmicgenes)
+    cosmicmutations = file(params.cosmicmutations)
+}
+if (params.cosmiccelllines_genes&&params.cosmiccelllines_mutations) {
+    cosmiccelllines_genes = file(params.cosmiccelllines_genes)
+    cosmiccelllines_mutations = file(params.cosmiccelllines_mutations)
+}
 cbioportal_config = file(params.cbioportal_config)
 protein_decoy_config = file(params.protein_decoy_config)
 
@@ -63,6 +71,15 @@ if (params.ensembl_name == "homo_sapiens"){
 // Pipeline checks
 if ((params.cosmic || params.cosmic_celllines) && (!params.cosmic_user_name || !params.cosmic_password)){
     exit 1, "User name and password has to be provided. In order to be able to download COSMIC data. Please first register in COSMIC database (https://cancer.sanger.ac.uk/cosmic/register)."
+}
+if ((params.cosmic&&params.cosmicgenes&&params.cosmicmutations)||(params.cosmic_celllines&&params.cosmiccelllines_genes&&params.cosmiccelllines_mutations)) {
+    exit 1, "You can only choose to download data or use local data."
+}
+if ((params.cosmicgenes&&!params.cosmicmutations) || (!params.cosmicgenes&&params.cosmicmutations)){
+    exit 1, "You have to provide both genes and mutations."
+}
+if ((params.cosmiccelllines_genes&&!params.cosmiccelllines_mutations) || (!params.cosmiccelllines_genes&&params.cosmiccelllines_mutations)){
+    exit 1, "You have to provide both genes and mutations."
 }
 
 
@@ -122,7 +139,7 @@ Channel.from(summary.collect{ [it.key, it.value] })
 
 /*
  * Parse software version numbers
- */
+*/
 process get_software_versions {
     publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode,
         saveAs: { filename ->
@@ -141,6 +158,7 @@ process get_software_versions {
     scrape_software_versions.py &> software_versions_mqc.yaml
     """
 }
+ 
 
 /**
  * Download data from ensembl for the particular species.
@@ -300,7 +318,7 @@ merged_databases = merged_databases.mix(optional_altorfs)
 process cosmic_download {
 
     when:
-    params.cosmic || params.cosmic_celllines
+    params.cosmic || params.cosmic_celllines 
 
     input:
     file cosmic_config
@@ -317,8 +335,9 @@ process cosmic_download {
         --config_file "$cosmic_config" \\
         --username $params.cosmic_user_name \\
         --password $params.cosmic_password
-    """
+    """  
 }
+
 
 /**
  * Generate proteindb from cosmic mutations
@@ -326,8 +345,8 @@ process cosmic_download {
 process cosmic_proteindb {
 
     when:
-    params.cosmic
-
+    params.cosmic 
+    
     input:
     file g from cosmic_genes
     file m from cosmic_mutations
@@ -346,8 +365,43 @@ process cosmic_proteindb {
         --output_db cosmic_proteinDB.fa
     """
 }
+if (params.cosmic) {
+    merged_databases = merged_databases.mix(cosmic_proteindbs)
+}
 
-merged_databases = merged_databases.mix(cosmic_proteindbs)
+/**
+ * Generate proteindb from local cosmic mutations
+*/
+process cosmic_proteindb_local {
+
+    when:
+    params.cosmicgenes&&params.cosmicmutations
+
+    input:
+    if (params.cosmicgenes&&params.cosmicmutations) {
+        file cosmicgenes
+        file cosmicmutations
+    }
+    
+    file cosmic_config
+
+    output:
+    file 'cosmic_proteinDB*.fa' into cosmic_proteindbs_uselocal
+
+    script:
+    """
+    pypgatk_cli.py cosmic-to-proteindb \\
+        --config_file "$cosmic_config" \\
+        --input_mutation $cosmicmutations --input_genes $cosmicgenes \\
+        --filter_column 'Histology subtype 1' \\
+        --accepted_values $params.cosmic_cancer_type \\
+        --output_db cosmic_proteinDB.fa
+    """
+}
+if (params.cosmicgenes&&params.cosmicmutations) {
+    merged_databases = merged_databases.mix(cosmic_proteindbs_uselocal)
+}
+
 
 /**
  * Generate proteindb from cosmic cell lines mutations
@@ -355,7 +409,7 @@ merged_databases = merged_databases.mix(cosmic_proteindbs)
 process cosmic_celllines_proteindb {
 
     when:
-    params.cosmic_celllines
+    params.cosmic_celllines 
 
     input:
     file g from cosmic_celllines_genes
@@ -376,8 +430,44 @@ process cosmic_celllines_proteindb {
         --output_db cosmic_celllines_proteinDB.fa
     """
 }
+if (params.cosmic_celllines) {
+    merged_databases = merged_databases.mix(cosmic_celllines_proteindbs)
+}
 
-merged_databases = merged_databases.mix(cosmic_celllines_proteindbs)
+/**
+ * Generate proteindb from local cosmic cell lines mutations
+*/
+process cosmic_celllines_proteindb_local {
+
+    when:
+    params.cosmiccelllines_genes&&params.cosmiccelllines_mutations
+
+    input:
+    if (params.cosmiccelllines_genes&&params.cosmiccelllines_mutations) {
+        file cosmiccelllines_genes
+        file cosmiccelllines_mutations
+    }
+    
+    file cosmic_config
+
+    output:
+    file 'cosmic_celllines_proteinDB*.fa' into cosmic_celllines_proteindbs_uselocal
+
+    script:
+    """
+    pypgatk_cli.py cosmic-to-proteindb \\
+        --config_file "$cosmic_config" \\
+        --input_mutation $cosmiccelllines_mutations \\
+        --input_genes $cosmiccelllines_genes \\
+        --filter_column 'Sample name' \\
+        --accepted_values $params.cosmic_cellline_name \\
+        --output_db cosmic_celllines_proteinDB.fa
+    """
+}
+if (params.cosmiccelllines_genes&&params.cosmiccelllines_mutations) {
+    merged_databases = merged_databases.mix(cosmic_celllines_proteindbs_uselocal)
+}
+
 
 /**
  * Download VCF files from ensembl for the particular species.
@@ -822,7 +912,7 @@ process decoy {
 
 /*
  * Output Description HTML
- */
+*/ 
 process output_documentation {
 
     publishDir "${params.outdir}/pipeline_info", mode: params.publish_dir_mode
@@ -839,6 +929,7 @@ process output_documentation {
     markdown_to_html.py $output_docs -o results_description.html
     """
 }
+
 
 /*
  * Completion e-mail notification
