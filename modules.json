@@ -1,0 +1,57 @@
+{
+    "name": "nf-core/proteogenomicsdb",
+    "homePage": "",
+    "repos": {
+        "https://github.com/nf-core/modules.git": {
+            "modules": {
+                "nf-core": {
+                    "cat/cat": {
+                        "branch": "master",
+                        "git_sha": "69614d4579a6bd9b8a2ecffb35959809d9c36559",
+                        "installed_by": ["modules"]
+                    },
+                    "freebayes": {
+                        "branch": "master",
+                        "git_sha": "d04951ee68e3e8b875ebf5ddb7ba6e05233624c1",
+                        "installed_by": ["modules"]
+                    },
+                    "gffcompare": {
+                        "branch": "master",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
+                    },
+                    "gffread": {
+                        "branch": "master",
+                        "git_sha": "51f2b493a7ff28b40a9f99faca64245521f2bb24",
+                        "installed_by": ["modules"]
+                    },
+                    "gunzip": {
+                        "branch": "master",
+                        "git_sha": "96c57dfd98a0641886a67bd449fe33ee2ec0e374",
+                        "installed_by": ["modules"]
+                    },
+                    "samtools/faidx": {
+                        "branch": "master",
+                        "git_sha": "9a48bce39a67e2cb34b8f125fc1d50f0ad98b616",
+                        "installed_by": ["modules"]
+                    },
+                    "stringtie/stringtie": {
+                        "branch": "master",
+                        "git_sha": "4cfbd65a8dbdcfd1bb2736c4e8c5c12ac61d3281",
+                        "installed_by": ["modules"]
+                    },
+                    "tabix/bgzip": {
+                        "branch": "master",
+                        "git_sha": "91a902fb32d6717da38a9694eb4ad3fade53a8db",
+                        "installed_by": ["modules"]
+                    },
+                    "wget": {
+                        "branch": "master",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
+                    }
+                }
+            }
+        }
+    }
+}

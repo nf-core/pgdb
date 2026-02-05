@@ -1,0 +1,30 @@
+pseudogenes_database:
+  translation_table: 1
+  proteindb_output_file: 'peptide-database.db'
+  pseudogenes_database:
+    mito_translation_table: 2
+    var_prefix: "pseudo_"
+    report_ref_seq: False
+    annotation_field_name: 'CSQ'
+    af_field: ''
+    af_threshold: 0.01
+    exclude_biotypes: ''
+    exclude_consequences: 'downstream_gene_variant, upstream_gene_variant, intergenic_variant, intron_variant, synonymous_variant, regulatory_region_variant'
+    skip_including_all_cds: True
+    include_biotypes: 'pseudogene,IG_C_pseudogene,IG_J_pseudogene,IG_V_pseudogene,IG_pseudogene,TR_V_pseudogene,TR_J_pseudogene,processed_pseudogene,rRNA_pseudogene,transcribed_processed_pseudogene,transcribed_unitary_pseudogene,transcribed_unprocessed_pseudogene,translated_unprocessed_pseudogene,unitary_pseudogene,unprocessed_pseudogene,translated_processed_pseudogene'
+    include_consequences: 'all'
+    biotype_str: transcript_biotype
+    transcript_description_sep: ';'
+    transcript_str: 'FEATURE'
+    consequence_str: 'CONSEQUENCE'
+    num_orfs: 3
+    num_orfs_complement: 0
+    expression_str: ""
+    expression_thresh: 5.0
+    ignore_filters: False
+    accepted_filters: 'PASS'
+  logger:
+    formatters:
+      DEBUG: "%(asctime)s [%(levelname)7s][%(name)48s][%(module)32s, %(lineno)4s] %(message)s"
+      INFO: "%(asctime)s [%(levelname)7s][%(name)48s] %(message)s"
+    loglevel: DEBUG

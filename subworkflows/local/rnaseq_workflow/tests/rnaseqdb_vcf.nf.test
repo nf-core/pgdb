@@ -1,0 +1,73 @@
+nextflow_workflow {
+
+    name "Test Subworkflow RNASEQDB"
+    script "../rnaseq_workflow.nf"
+    workflow "RNASEQDB"
+    config "./nextflow.config"
+
+    test("full rnaseq workflow") {
+
+        when {
+            workflow {
+                """
+
+                input[0]  = file('$projectDir/assets/test_files/rnaseqdb/input_1.sorted.bam', checkIfExists: true)
+                input[1]  = file('$projectDir/assets/test_files/rnaseqdb/input_1.sorted.bam.bai', checkIfExists: true)
+                input[2]  = file('$projectDir/assets/test_files/rnaseqdb/Saccharomyces_cerevisiae.R64-1-1.115.gtf', checkIfExists: true)
+                input[3]  = file('$projectDir/assets/test_files/rnaseqdb/Saccharomyces_cerevisiae.R64-1-1.cdna.all.fa', checkIfExists: true)
+                input[4]  = file('$projectDir/assets/conf/pypgatk_config_files/custom_config.yaml', checkIfExists: true)
+                input[5]  = file('$projectDir/assets/conf/pypgatk_config_files/dna_config.yaml', checkIfExists: true)
+                input[6]  = file('$projectDir/assets/test_files/rnaseqdb/', checkIfExists: true)
+                input[7]  = false
+                input[8]  = true
+                input[9]  = false
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.versions_ch,
+                    workflow.out.merged_databases_ch
+                ).match() }
+            )
+        }
+    }
+
+    test("full rnaseqdb workflow -stub") {
+
+        options "stub"
+
+        when {
+            workflow {
+                """
+
+                input[0]  = file('$projectDir/assets/test_files/rnaseqdb/input_1.sorted.bam', checkIfExists: true)
+                input[1]  = file('$projectDir/assets/test_files/rnaseqdb/input_1.sorted.bam.bai', checkIfExists: true)
+                input[2]  = file('$projectDir/assets/test_files/rnaseqdb/Saccharomyces_cerevisiae.R64-1-1.115.gtf', checkIfExists: true)
+                input[3]  = file('$projectDir/assets/test_files/rnaseqdb/Saccharomyces_cerevisiae.R64-1-1.cdna.all.fa', checkIfExists: true)
+                input[4]  = file('$projectDir/assets/conf/pypgatk_config_files/custom_config.yaml', checkIfExists: true)
+                input[5]  = file('$projectDir/assets/conf/pypgatk_config_files/dna_config.yaml', checkIfExists: true)
+                input[6]  = file('$projectDir/assets/test_files/rnaseqdb/', checkIfExists: true)
+                input[7]  = false
+                input[8]  = true
+                input[9]  = false
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.versions_ch,
+                    workflow.out.merged_databases_ch
+                ).match() }
+            )
+        }
+    }
+}

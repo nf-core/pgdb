@@ -1,0 +1,60 @@
+nextflow_workflow {
+
+    name "Test Subworkflow CBIOPORTALDB"
+    script "../cbioportal_workflow.nf"
+    workflow "CBIOPORTALDB"
+    config "./nextflow.config"
+
+    test("--skip_cbioportaldb false") {
+
+        when {
+            workflow {
+                """
+
+                input[0]  = 'https://datahub.assets.cbioportal.org/es_iocurie_2014.tar.gz'
+                input[1]  = 'ftp://ftp.ensembl.org/pub/release-115/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz'
+                input[2]  = 'es_iocurie_2014'
+                input[3]  = file('$projectDir/conf/pypgatk_config_files/cbioportal.config.yaml', checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.versions_ch,
+                    workflow.out.cbioportal_database
+                ).match() }
+            )
+        }
+    }
+
+    test("--skip_cbioportaldb false -stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+
+                input[0]  = 'https://datahub.assets.cbioportal.org/es_iocurie_2014.tar.gz'
+                input[1]  = 'ftp://ftp.ensembl.org/pub/release-115/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz'
+                input[2]  = 'es_iocurie_2014'
+                input[3]  = file('$projectDir/conf/pypgatk_config_files/cbioportal.config.yaml', checkIfExists: true)
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.versions_ch,
+                    workflow.out.cbioportal_database
+                ).match() }
+            )
+        }
+    }
+}

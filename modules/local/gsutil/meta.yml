@@ -1,0 +1,47 @@
+name: gsutil
+description: A module for to dowload a vcf file off of a google drive to build a peptide database
+keywords:
+  - downloader
+  - google drive
+  - vcf
+tools:
+  - gsutil cp:
+      description: copies a file off a google drive
+      documentation: https://docs.cloud.google.com/storage/docs/gsutil
+      licence: 
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'input_url' ]
+    - url:
+        type: file
+        description: url of the vcf file you want to download off of a google drive
+        pattern: "*.vcf.bz"
+        ontologies: []
+output:
+  file_out:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id: 'output_file' ]
+      - vcf:
+          type: file
+          description: output vcf file
+          pattern: ".vcf.bz"
+          ontologies: []
+      - versions:
+      -   versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+          ontologies:
+            - edam: http://edamontology.org/format_3750 # YAML
+
+authors:
+  - "@alistairrice"
+maintainers:
+  - "@hywelldunn-davies"

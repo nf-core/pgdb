@@ -1,5 +1,0 @@
-## NOTE - after nf-core/tools release 1.14 delete this line and
-## uncomment the ones below. See https://github.com/nf-core/tools/pull/1019
-nextflow_config: False
-# nextflow_config:
-#  - params.input

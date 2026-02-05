@@ -1,0 +1,16 @@
+repository_type: pipeline
+
+nf_core_version: 3.3.2
+
+lint: {}
+
+template:
+  org: nf-core
+  name: proteogenomicsdb
+  description: The proteogenomicsdb pipeline (formerly known as pgdb) creates custom
+    protein databases for ProteoGenomics data analysis.
+  author: Alistair Rice, Hywel Dunn-Davies, Yasset Perez Riverol, and Husen M. Umer
+  version: 2.0.0
+  force: true
+  outdir: proteogenomicsdb
+  is_nfcore: true

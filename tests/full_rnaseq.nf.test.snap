@@ -1,0 +1,44 @@
+{
+    "full rnaseq test": {
+        "content": [
+            0,
+            null,
+            [
+                "execution_report_2026-02-04_13-10-59.html",
+                "execution_timeline_2026-02-04_13-10-59.html",
+                "pipeline_dag_2026-02-04_13-10-59.html"
+            ],
+            [
+                "execution_report_2026-02-04_13-10-59.html:md5,c6f093b151571fa8b13da5f76cd8fbf9",
+                "execution_timeline_2026-02-04_13-10-59.html:md5,117d24575c94e8d403da93bc83c6e62c",
+                "pipeline_dag_2026-02-04_13-10-59.html:md5,d73a2d4aee6188ee90e0c6a66c685e06"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-04T13:11:08.573815803"
+    },
+    "full rnaseq test -stub": {
+        "content": [
+            0,
+            null,
+            [
+                "execution_report_2026-02-04_13-11-18.html",
+                "execution_timeline_2026-02-04_13-11-18.html",
+                "pipeline_dag_2026-02-04_13-11-18.html"
+            ],
+            [
+                "execution_report_2026-02-04_13-11-18.html:md5,f6fe1fad458ee40706dfa4291feb840d",
+                "execution_timeline_2026-02-04_13-11-18.html:md5,fc13e508edc1357c9a0cfe5b185aa31e",
+                "pipeline_dag_2026-02-04_13-11-18.html:md5,d73a2d4aee6188ee90e0c6a66c685e06"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-04T13:11:28.483805033"
+    }
+}

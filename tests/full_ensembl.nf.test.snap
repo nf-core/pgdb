@@ -1,0 +1,72 @@
+{
+    "full ensembl workflow -stub": {
+        "content": [
+            7,
+            null,
+            [
+                "cat",
+                "cat/Total_cDNA.fa",
+                "cat/final_database.fa",
+                "execution_report_2026-02-04_13-08-46.html",
+                "execution_timeline_2026-02-04_13-08-46.html",
+                "pipeline_dag_2026-02-04_13-08-46.html",
+                "pipeline_info",
+                "pypgatk",
+                "pypgatk/Altorfs_database.fa",
+                "pypgatk/cleaned_database.fa",
+                "pypgatk/ensembl.dna_test.fa",
+                "pypgatk/ensembl.gtf",
+                "pypgatk/ensembl.pep.all.fa",
+                "pypgatk/ensembl.vcf",
+                "pypgatk/ensembl_cdna.all.fa",
+                "pypgatk/ensembl_ncrna.fa",
+                "pypgatk/ncRNA.fa",
+                "pypgatk/pseudogenes.fa"
+            ],
+            [
+                "Total_cDNA.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "final_database.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "execution_report_2026-02-04_13-08-46.html:md5,445d1b1df036487ba5d210d895e8f3d7",
+                "execution_timeline_2026-02-04_13-08-46.html:md5,8ab978028d594b0d2da0b738872b81f2",
+                "pipeline_dag_2026-02-04_13-08-46.html:md5,32d161f5e1c964634325d89710d47b7d",
+                "Altorfs_database.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "cleaned_database.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "ensembl.dna_test.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "ensembl.gtf:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "ensembl.pep.all.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "ensembl.vcf:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "ensembl_cdna.all.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "ensembl_ncrna.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "ncRNA.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "pseudogenes.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-04T13:10:07.30367987"
+    },
+    "full ensembl workflow": {
+        "content": [
+            0,
+            null,
+            [
+                "execution_report_2026-02-04_13-08-12.html",
+                "execution_timeline_2026-02-04_13-08-12.html",
+                "pipeline_dag_2026-02-04_13-08-12.html",
+                "pipeline_info"
+            ],
+            [
+                "execution_report_2026-02-04_13-08-12.html:md5,7e42de2161d544cbbcc06f8633946c3f",
+                "execution_timeline_2026-02-04_13-08-12.html:md5,ad5f65a17ac44c8ea6cc1dcb35620eda",
+                "pipeline_dag_2026-02-04_13-08-12.html:md5,32d161f5e1c964634325d89710d47b7d"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-04T13:08:36.705969871"
+    }
+}

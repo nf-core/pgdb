@@ -1,0 +1,73 @@
+name: pypgatk_cbioportaldb
+description: A module for the generation of a peptide database from cbioportal data
+keywords:
+  - peptide
+  - protein
+  - vcf
+  - database
+tools:
+  - cbioportal-to-proteindb:
+      description: takes files downloaded from cbioportal and generates a peptide database
+      documentation: https://pgatk.readthedocs.io/en/latest/pypgatk.html
+      licence: 
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'transcripts' ]
+    - grch38_cdna:
+        type: file
+        description: human cdna file downloaded from ensembl 
+        pattern: ".fa"
+        ontologies: []
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id: 'mutations' ]
+    - cbio_mutations:
+        type: file
+        description: mutation data downloaded from cbioportal
+        pattern: ".txt"
+        ontologies: []
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id: 'samples' ]
+    - cbio_samples:
+        type: file
+        description: sample data downloaded from cbioportal
+        pattern: ".txt"
+        ontologies: []
+    - cbioportal_config:
+        type: file
+        description: config file used to define the paramiters of the process
+        pattern: ".yaml"
+        ontologies: []
+output:
+  file_out:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id: 'output_proteindb' ]
+      - database:
+          type: file
+          description: output peptide database
+          pattern: ".fa"
+          ontologies: []
+      - versions:
+    -     versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+          ontologies:
+            - edam: http://edamontology.org/format_3750 # YAML
+
+authors:
+  - "@alistairrice"
+maintainers:
+  - "@hywelldunn-davies"

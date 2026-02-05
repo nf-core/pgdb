@@ -1,0 +1,44 @@
+{
+    "full pipeline test": {
+        "content": [
+            0,
+            null,
+            [
+                "execution_report_2026-02-04_13-10-17.html",
+                "execution_timeline_2026-02-04_13-10-17.html",
+                "pipeline_dag_2026-02-04_13-10-17.html"
+            ],
+            [
+                "execution_report_2026-02-04_13-10-17.html:md5,65c80ff0ef0dee4b5e99c7b3f6e4befc",
+                "execution_timeline_2026-02-04_13-10-17.html:md5,78b5a6568e61791852044693e76a337f",
+                "pipeline_dag_2026-02-04_13-10-17.html:md5,d73a2d4aee6188ee90e0c6a66c685e06"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-04T13:10:26.968942503"
+    },
+    "full pipeline test -stub": {
+        "content": [
+            0,
+            null,
+            [
+                "execution_report_2026-02-04_13-10-38.html",
+                "execution_timeline_2026-02-04_13-10-38.html",
+                "pipeline_dag_2026-02-04_13-10-38.html"
+            ],
+            [
+                "execution_report_2026-02-04_13-10-38.html:md5,d6d7d1ac9ddaf0ae1e4cec3983b78855",
+                "execution_timeline_2026-02-04_13-10-38.html:md5,950e86a268ce521651ff0aa298a9b95b",
+                "pipeline_dag_2026-02-04_13-10-38.html:md5,d73a2d4aee6188ee90e0c6a66c685e06"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-04T13:10:48.078122379"
+    }
+}

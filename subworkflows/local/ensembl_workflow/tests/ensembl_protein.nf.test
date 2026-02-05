@@ -1,0 +1,73 @@
+nextflow_workflow {
+
+    name "Test Subworkflow ENSEMBLDB"
+    script "../ensembl_workflow.nf"
+    workflow "ENSEMBLDB"
+    config "./nextflow.config"
+
+    test("ensembldb full workflow") {
+
+        when {
+            workflow {
+                """
+
+                input[0]  = file('$projectDir/conf/pypgatk_config_files/ensembl_downloader_config.yaml, checkIfExists: true)
+                input[1]  = ['559292']
+                input[2]  = file('$projectDir/conf/pypgatk_config_files/ensembl_config.yaml, checkIfExists: true)
+                input[3]  = file('$projectDir/conf/pypgatk_config_files/altorfs_config.yaml, checkIfExists: true)
+                input[4]  = file('$projectDir/conf/pypgatk_config_files/pseudogenes_config.yaml, checkIfExists: true)
+                input[5]  = file('$projectDir/conf/pypgatk_config_files/ncrna_config.yaml, checkIfExists: true)
+                input[6]  = false
+                input[7]  = true
+                input[8]  = true
+                input[9]  = true
+                input[10] = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.versions_ch,
+                    workflow.out.mixed_databases
+                ).match() }
+            )
+        }
+    }
+
+    test("ensembldb full workflow -stub") {
+
+        options "stub"
+
+        when {
+            workflow {
+                """     
+
+                input[0]  = file('$projectDir/conf/pypgatk_config_files/ensembl_downloader_config.yaml, checkIfExists: true)
+                input[1]  = ['559292']
+                input[2]  = file('$projectDir/conf/pypgatk_config_files/ensembl_config.yaml, checkIfExists: true)
+                input[3]  = file('$projectDir/conf/pypgatk_config_files/altorfs_config.yaml, checkIfExists: true)
+                input[4]  = file('$projectDir/conf/pypgatk_config_files/pseudogenes_config.yaml, checkIfExists: true)
+                input[5]  = file('$projectDir/conf/pypgatk_config_files/ncrna_config.yaml, checkIfExists: true)
+                input[6]  = false
+                input[7]  = true
+                input[8]  = true
+                input[9]  = true
+                input[10] = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.versions_ch,
+                    workflow.out.mixed_databases
+                ).match() }
+            )
+        }
+    }
+}

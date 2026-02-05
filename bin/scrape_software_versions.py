@@ -4,12 +4,12 @@ from collections import OrderedDict
 import re
 
 regexes = {
-    "nf-core/pgdb": ["v_pipeline.txt", r"(\S+)"],
+    "nf-core/proteogenomicsdb": ["v_pipeline.txt", r"(\S+)"],
     "Nextflow": ["v_nextflow.txt", r"(\S+)"],
     "pypgatk": ["v_pypgatk.txt", r"(\S+)"],
 }
 results = OrderedDict()
-results["nf-core/pgdb"] = '<span style="color:#999999;">N/A</span>'
+results["nf-core/proteogenomicsdb"] = '<span style="color:#999999;">N/A</span>'
 results["Nextflow"] = '<span style="color:#999999;">N/A</span>'
 results["pypgatk"] = '<span style="color:#999999;">N/A</span>'
 
@@ -33,8 +33,8 @@ for k in list(results):
 print(
     """
 id: 'software_versions'
-section_name: 'nf-core/pgdb Software Versions'
-section_href: 'https://github.com/nf-core/pgdb'
+section_name: 'nf-core/proteogenomicsdb Software Versions'
+section_href: 'https://github.com/nf-core/proteogenomicsdb'
 plot_type: 'html'
 description: 'are collected at run time from the software output.'
 data: |

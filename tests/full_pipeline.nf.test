@@ -1,0 +1,160 @@
+nextflow_pipeline {
+
+name "Test full pipeline"
+    script "../main.nf"
+    tag "pipeline"
+
+    test("full pipeline test") {
+
+        when {
+            params {
+
+            //skip options
+            skip_fastqc   = false
+            skip_trimming = false
+
+            skip_rnaseqdb = false
+            skip_dnaseq   = false
+            skip_vcf      = false
+
+            skip_ensembldb   = false
+            skip_proteome    = false
+            skip_ncrna       = false
+            skip_pseudogenes = false
+            skip_altorfs     = false
+
+            skip_cosmicdb     = true
+            skip_genecodedb   = false
+            skip_cbioportaldb = false
+            skip_decoy        = false
+
+            skip_additional_database = false
+
+            //PROTEOGENOMICSDB inputs
+            bam_file  = "$projectDir/assets/test_files/input_1.sorted.bam"
+            bam_index  = "$projectDir/assets/test_files/input_1.sorted.bam.bai"
+            annotation  = "$projectDir/assets/test_files/Saccharomyces_cerevisiae.R64-1-1.115.gtf"
+            reference   = "$projectDir/assets/test_files/Saccharomyces_cerevisiae.R64-1-1.dna.toplevel.fa"
+            transcripts = "$projectDir/assets/test_files/Saccharomyces_cerevisiae.R64-1-1.cdna.all.fa"
+
+            //ENSEMBLDB inputs
+            species_id = '559292'
+
+            //GNOMADDB inputs
+            genecode_transcripts_url = 'https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.transcripts.fa.gz'
+            genecode_annotations_url = 'https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.annotation.gtf.gz'
+            gnomad_url               =  'gs://gcp-public-data--gnomad/release/2.1.1/vcf/exomes/gnomad.exomes.r2.1.1.sites.18.vcf.bgz'
+
+            //CBIOPORTALDB inputs
+            cbioportal_url = 'https://datahub.assets.cbioportal.org/es_iocurie_2014.tar.gz'
+            grch38_url  = 'ftp://ftp.ensembl.org/pub/release-115/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz'
+            cbio_study  = 'es_iocurie_2014'
+
+            //additional database
+            additional_database = "$projectDir/assets/test_file/mergedb/ensembl_vcf.fa"
+            
+            //output directory
+            outdir            = "${outputDir}"
+
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_proteogenomicsdb_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+    
+    test("full pipeline test -stub") {
+   
+        options "-stub"
+
+        when {
+            params {
+
+            //skip options
+            skip_fastqc   = false
+            skip_trimming = false
+
+            skip_rnaseqdb = false
+            skip_dnaseq   = false
+            skip_vcf      = false
+
+            skip_ensembldb   = false
+            skip_proteome    = false
+            skip_ncrna       = false
+            skip_pseudogenes = false
+            skip_altorfs     = false
+
+            skip_cosmicdb     = true
+            skip_genecodedb   = false
+            skip_cbioportaldb = false
+            skip_decoy        = false
+
+            skip_additional_database = false
+
+            //PROTEOGENOMICSDB inputs
+            bam_file  = "$projectDir/assets/test_files/input_1.sorted.bam"
+            bam_index  = "$projectDir/assets/test_files/input_1.sorted.bam.bai"
+            annotation  = "$projectDir/assets/test_files/Saccharomyces_cerevisiae.R64-1-1.115.gtf"
+            reference   = "$projectDir/assets/test_files/Saccharomyces_cerevisiae.R64-1-1.dna.toplevel.fa"
+            transcripts = "$projectDir/assets/test_files/Saccharomyces_cerevisiae.R64-1-1.cdna.all.fa"
+
+            //ENSEMBLDB inputs
+            species_id = '559292'
+
+            //GENECODEDB inputs
+            genecode_transcripts_url = 'https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.transcripts.fa.gz'
+            genecode_annotations_url = 'https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.annotation.gtf.gz'
+            gnomad_url               =  'gs://gcp-public-data--gnomad/release/2.1.1/vcf/exomes/gnomad.exomes.r2.1.1.sites.18.vcf.bgz'
+
+            //CBIOPORTALDB inputs
+            cbioportal_url = 'https://datahub.assets.cbioportal.org/es_iocurie_2014.tar.gz'
+            grch38_url  = 'ftp://ftp.ensembl.org/pub/release-115/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz'
+            cbio_study  = 'es_iocurie_2014'
+
+            //additional database
+            additional_database = "$projectDir/assets/test_file/mergedb/ensembl_vcf.fa"
+            
+            //output directory
+            outdir            = "${outputDir}"
+
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we test pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_proteogenomicsdb_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+}

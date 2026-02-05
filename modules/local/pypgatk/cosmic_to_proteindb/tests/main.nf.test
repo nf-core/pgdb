@@ -1,0 +1,81 @@
+nextflow_pipeline {
+
+    name "Test pypgatk_cosmicdb"
+    script "../main.nf"
+    tag "module"
+    process "PYPGATK_COSMICDB"
+
+    test("-profile pypgatk_cosmicdb test") {
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id: 'cosmic_genes' ], 
+                    file('$projectDir/assets/test_files/cosmicdb/cosmic_genes.fasta', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id: 'cosmic_mutations' ], 
+                    file('$projectDir/assets/test_files/cosmicdb/cosmic_mutations.tsv', checkIfExists: true)
+                ])
+                input[2] = Channel.of([
+                    file('params.cosmic_config', checkIfExists: true)
+                ])
+                
+                """
+
+            }
+        }
+
+        then {
+            assertAll(
+
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            
+            )
+        }
+    }
+
+
+
+    test("-profile pypgatk_cosmicdb test") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id: 'cosmic_genes' ], 
+                    file('$projectDir/assets/test_files/cosmicdb/cosmic_genes.fasta', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id: 'cosmic_mutations' ], 
+                    file('$projectDir/assets/test_files/cosmicdb/cosmic_mutations.tsv', checkIfExists: true)
+                ])
+                input[2] = Channel.of([
+                    file('params.cosmic_config', checkIfExists: true)
+                ])
+
+                """
+
+            }
+        }
+
+        then {
+            assertAll(
+
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            
+            )
+        }
+    }
+}

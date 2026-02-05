@@ -1,0 +1,64 @@
+nextflow_pipeline {
+
+    name "Test pypgatk_cosmic"
+    script "../main.nf"
+    tag "module"
+    process "PYPGATK_COSMIC"
+
+    test("-profile pypgatk_cosmic test") {
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+            process {
+                """
+        
+                input[0] = ['username']
+                input[1] = ['password']
+                input[2] = ["https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?path=grch38/cosmic/v103/Cosmic_Genes_Fasta_v103_GRCh38.tar&bucket=downloads"]
+                input[3] = ["https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?path=grch38/cosmic/v103/Cosmic_GenomeScreensMutant_Tsv_v103_GRCh38.tar&bucket=downloads"]
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            
+            )
+        }
+    }
+
+    test("-profile pypgatk_cosmic test -stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+            process {
+                """
+                input[0] = ['username']
+                input[1] = ['password']
+                input[2] = ["https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?path=grch38/cosmic/v103/Cosmic_Genes_Fasta_v103_GRCh38.tar&bucket=downloads"]
+                input[3] = ["https://cancer.sanger.ac.uk/api/mono/products/v1/downloads/scripted?path=grch38/cosmic/v103/Cosmic_GenomeScreensMutant_Tsv_v103_GRCh38.tar&bucket=downloads"]
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            
+            )
+        }
+    }
+}

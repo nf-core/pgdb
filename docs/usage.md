@@ -1,6 +1,6 @@
-# nf-core/pgdb: Usage
+# nf-core/proteogenomicsdb: Usage
 
-## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/pgdb/usage](https://nf-co.re/pgdb/usage)
+## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/proteogenomicsdb/usage](https://nf-co.re/proteogenomicsdb/usage)
 
 > _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
 
@@ -9,20 +9,20 @@
 General usage:
 
 ```bash
-nextflow run nf-core/pgdb -profile <docker/singularity/podman/conda/institute> --ensembl_name homo_sapiens --decoy
+nextflow run nf-core/proteogenomicsdb -profile <docker/singularity/podman/conda/institute> --ensembl_name homo_sapiens --decoy
 ```
 
 This command will download the ENSEMBL human proteome and attach the decoy database to it.
 
 ## Adding non canonical proteins
 
-The main purpose of the pgdb pipeline is to add non-canonical proteins to the database including variants, ncRNAs, altORFs:
+The main purpose of the proteogenomicsdb pipeline is to add non-canonical proteins to the database including variants, ncRNAs, altORFs:
 
 ```bash
-nextflow run nf-core/pgdb --ensembl_name homo_sapiens --altorfs --decoy -profile docker
+nextflow run nf-core/proteogenomicsdb --ensembl_name homo_sapiens --altorfs --decoy -profile docker
 ```
 
-Please see the [https://nf-co.re/pgdb/parameters](parameter documentation) to see which options are available.
+Please see the [https://nf-co.re/proteogenomicsdb/parameters](parameter documentation) to see which options are available.
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
 
@@ -44,14 +44,14 @@ The full documentation of the pipeline can be found [here](https://pgatk.readthe
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
 ```bash
-nextflow pull nf-core/pgdb
+nextflow pull nf-core/proteogenomicsdb
 ```
 
 ### Reproducibility
 
 It's a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [nf-core/pgdb releases page](https://github.com/nf-core/pgdb/releases) and find the latest version number - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`.
+First, go to the [nf-core/proteogenomicsdb releases page](https://github.com/nf-core/proteogenomicsdb/releases) and find the latest version number - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
@@ -76,19 +76,19 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 
 * `docker`
   * A generic configuration profile to be used with [Docker](https://docker.com/)
-  * Pulls software from Docker Hub: [`nfcore/pgdb`](https://hub.docker.com/r/nfcore/pgdb/)
+  * Pulls software from Docker Hub: [`nfcore/proteogenomicsdb`](https://hub.docker.com/r/nfcore/proteogenomicsdb/)
 * `singularity`
   * A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
-  * Pulls software from Docker Hub: [`nfcore/pgdb`](https://hub.docker.com/r/nfcore/pgdb/)
+  * Pulls software from Docker Hub: [`nfcore/proteogenomicsdb`](https://hub.docker.com/r/nfcore/proteogenomicsdb/)
 * `podman`
   * A generic configuration profile to be used with [Podman](https://podman.io/)
-  * Pulls software from Docker Hub: [`nfcore/pgdb`](https://hub.docker.com/r/nfcore/pgdb/)
+  * Pulls software from Docker Hub: [`nfcore/proteogenomicsdb`](https://hub.docker.com/r/nfcore/proteogenomicsdb/)
 * `shifter`
   * A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
-  * Pulls software from Docker Hub: [`nfcore/pgdb`](https://hub.docker.com/r/nfcore/pgdb/)
+  * Pulls software from Docker Hub: [`nfcore/proteogenomicsdb`](https://hub.docker.com/r/nfcore/proteogenomicsdb/)
 * `charliecloud`
   * A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
-  * Pulls software from Docker Hub: [`nfcore/pgdb`](https://hub.docker.com/r/nfcore/pgdb/)
+  * Pulls software from Docker Hub: [`nfcore/proteogenomicsdb`](https://hub.docker.com/r/nfcore/proteogenomicsdb/)
 * `conda`
   * Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter or Charliecloud.
   * A generic configuration profile to be used with [Conda](https://conda.io/docs/)

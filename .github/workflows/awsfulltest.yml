@@ -1,45 +1,48 @@
 name: nf-core AWS full size tests
-# This workflow is triggered on published releases.
-# It can be additionally triggered manually with GitHub actions workflow dispatch.
+# This workflow is triggered on PRs opened against the main/master branch.
+# It can be additionally triggered manually with GitHub actions workflow dispatch button.
 # It runs the -profile 'test_full' on AWS batch
 
 on:
-  workflow_run:
-    workflows: ["nf-core Docker push (release)"]
-    types: [completed]
   workflow_dispatch:
-
-
-env:
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  TOWER_ACCESS_TOKEN: ${{ secrets.AWS_TOWER_TOKEN }}
-  AWS_JOB_DEFINITION: ${{ secrets.AWS_JOB_DEFINITION }}
-  AWS_JOB_QUEUE: ${{ secrets.AWS_JOB_QUEUE }}
-  AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-
+  pull_request_review:
+    types: [submitted]
+  release:
+    types: [published]
 
 jobs:
-  run-awstest:
+  run-platform:
     name: Run AWS full tests
-    if: github.repository == 'nf-core/pgdb'
+    # run only if the PR is approved by at least 2 reviewers and against the master/main branch or manually triggered
+    if: github.repository == 'nf-core/proteogenomicsdb' && github.event.review.state == 'approved' && (github.event.pull_request.base.ref == 'master' || github.event.pull_request.base.ref == 'main') || github.event_name == 'workflow_dispatch' || github.event_name == 'release'
     runs-on: ubuntu-latest
     steps:
-      - name: Setup Miniconda
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          auto-update-conda: true
-          python-version: 3.7
-      - name: Install awscli
-        run: conda install -c conda-forge awscli
-      - name: Start AWS batch job
+      - name: Set revision variable
+        id: revision
+        run: |
+          echo "revision=${{ (github.event_name == 'workflow_dispatch' || github.event_name == 'release') && github.sha || 'dev' }}" >> "$GITHUB_OUTPUT"
+
+      - name: Launch workflow via Seqera Platform
+        uses: seqeralabs/action-tower-launch@v2
+        # TODO nf-core: You can customise AWS full pipeline tests as required
         # Add full size test data (but still relatively small datasets for few samples)
         # on the `test_full.config` test runs with only one set of parameters
-        # Then specify `-profile test_full` instead of `-profile test` on the AWS batch command
-        run: |
-          aws batch submit-job \
-            --region eu-west-1 \
-            --job-name nf-core-pgdb \
-            --job-queue $AWS_JOB_QUEUE \
-            --job-definition $AWS_JOB_DEFINITION \
-            --container-overrides '{"command": ["nf-core/pgdb", "-r '"${GITHUB_SHA}"' -profile test_full --outdir s3://'"${AWS_S3_BUCKET}"'/pgdb/results-'"${GITHUB_SHA}"' -w s3://'"${AWS_S3_BUCKET}"'/pgdb/work-'"${GITHUB_SHA}"' -with-tower"], "environment": [{"name": "TOWER_ACCESS_TOKEN", "value": "'"$TOWER_ACCESS_TOKEN"'"}]}'
+        with:
+          workspace_id: ${{ vars.TOWER_WORKSPACE_ID }}
+          access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
+          compute_env: ${{ vars.TOWER_COMPUTE_ENV }}
+          revision: ${{ steps.revision.outputs.revision }}
+          workdir: s3://${{ vars.AWS_S3_BUCKET }}/work/proteogenomicsdb/work-${{ steps.revision.outputs.revision }}
+          parameters: |
+            {
+              "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
+              "outdir": "s3://${{ vars.AWS_S3_BUCKET }}/proteogenomicsdb/results-${{ steps.revision.outputs.revision }}"
+            }
+          profiles: test_full
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: Seqera Platform debug log file
+          path: |
+            tower_action_*.log
+            tower_action_*.json

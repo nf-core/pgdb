@@ -1,0 +1,65 @@
+nextflow_workflow {
+
+    name "Test Subworkflow MERGEDB"
+    script "../merge_workflow.nf"
+    workflow "MERGEDB"
+    config "./nextflow.config"
+
+    test("test mergedb --skip_decoy true") {
+
+        when {
+            workflow {
+                """
+               input[0] = Channel.of([
+                    [ id: 'database' ], 
+                    file('$projectDir/assets/test_files/mergedb/ensembl_vcf.fa', checkIfExists: true)
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[1]  = file('$projectDir/conf/pypgatk_config_files/clean_config.yaml', checkIfExists: true)
+                input[2]  = file('$projectDir/conf/pypgatk_config_files/protein_decoy.yaml', checkIfExists: true)
+                input[3]  = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.versions_ch,
+                    workflow.out.databases,
+                    workflow.out.decoy
+                ).match() }
+            )
+        }
+    }
+
+    test("test mergedb --skip_decoy true -stub") {
+
+        options "stub"
+
+        when {
+            workflow {
+                """
+               input[0] = Channel.of([
+                    [ id: 'database' ], 
+                    file('$projectDir/assets/test_files/mergedb/ensembl_vcf.fa', checkIfExists: true)
+                input[0]  = file(params.pipelines_testdata_base_path + 'reference/genes_with_empty_tid.gtf', checkIfExists: true)
+                input[1]  = file('$projectDir/conf/pypgatk_config_files/clean_config.yaml', checkIfExists: true)
+                input[2]  = file('$projectDir/conf/pypgatk_config_files/protein_decoy.yaml', checkIfExists: true)
+                input[3]  = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.versions_ch,
+                    workflow.out.databases,
+                    workflow.out.decoy
+                ).match() }
+            )
+        }
+    }
+}

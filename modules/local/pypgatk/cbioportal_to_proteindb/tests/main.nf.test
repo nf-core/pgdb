@@ -1,0 +1,91 @@
+nextflow_pipeline {
+
+    name "Test pypgatk_vcf"
+    script "../main.nf"
+    tag "module"
+    process "PYPGATK_CBIOPORTAL"
+
+    test("-profile pypgatk_vcf test") {
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id: 'cdna' ], 
+                    file('$projectDir/assets/test_files/cbioportaldb/grch38.gz', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id: 'mutations' ], 
+                    file('$projectDir/assets/test_files/cbioportaldb/cbioportal_allstudies_data_mutations.txt', checkIfExists: true)
+                ])
+                input[2] = Channel.of([
+                    [ id: 'samples' ], 
+                    file('$projectDir/assets/test_files/cbioportaldb/cbioportal_allstudies_data_clinical_sample.txt', checkIfExists: true)
+                ])
+                input[3] = Channel.of([
+                    file('params.cbioportal_config, checkIfExists: true')
+                ])
+
+                """
+
+            }
+        }
+        tuple val(meta), path(grch38_cdna)
+    tuple val(meta), path(cbio_mutations)
+    tuple val(meta), path(cbio_samples)
+    path cbioportal_config
+
+        then {
+            assertAll(
+
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            
+            )
+        }
+    }
+
+    test("-profile pypgatk_vcf test -stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id: 'cdna' ], 
+                    file('$projectDir/assets/test_files/cbioportaldb/grch38.gz', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    [ id: 'mutations' ], 
+                    file('$projectDir/assets/test_files/cbioportaldb/cbioportal_allstudies_data_mutations.txt', checkIfExists: true)
+                ])
+                input[2] = Channel.of([
+                    [ id: 'samples' ], 
+                    file('$projectDir/assets/test_files/cbioportaldb/cbioportal_allstudies_data_clinical_sample.txt', checkIfExists: true)
+                ])
+                input[3] = Channel.of([
+                    file('params.cbioportal_config, checkIfExists: true')
+                ])
+
+                """
+
+            }
+        }
+
+        then {
+            assertAll(
+
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            
+            )
+        }
+    }
+}

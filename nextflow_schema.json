@@ -1,250 +1,22 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://raw.githubusercontent.com/nf-core/pgdb/master/nextflow_schema.json",
-    "title": "nf-core/pgdb pipeline parameters",
-    "description": "Proteogenomics database creation workflow using pypgatk framework. ",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/proteogenomicsdb/main/nextflow_schema.json",
+    "title": "nf-core/proteogenomicsdb pipeline parameters",
+    "description": "The proteogenomicsdb pipeline (formerly known as pgdb) creates custom protein databases for ProteoGenomics data analysis.",
     "type": "object",
-    "definitions": {
-        "ensembl_canonical_proteomes": {
-            "title": "ENSEMBL canonical proteomes",
-            "type": "object",
-            "description": "Add ENSEMBL canonical proteomes",
-            "default": "",
-            "properties": {
-                "add_reference": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Add the reference proteome to the file"
-                },
-                "ensembl_downloader_config": {
-                    "type": "string",
-                    "description": "Path to configuration file for ENSEMBL download parameters"
-                },
-                "ensembl_config": {
-                    "type": "string",
-                    "description": "Path to configuration file for parameters in generating protein databases from ENSMEBL sequences"
-                },
-                "gencode_url": {
-                    "type": "string",
-                    "default": "ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_19",
-                    "description": "URL for downloading GENCODE datafiles"
-                },
-                "ensembl_name": {
-                    "type": "string",
-                    "default": "homo_sapiens",
-                    "description": "Taxonomic term for the species to download from ENSEMBL"
-                }
-            }
-        },
-        "non_canonical_proteome_parameters": {
-            "title": "Non canonical proteome parameters",
-            "type": "object",
-            "description": "Non canonical proteins generation parameters",
-            "default": "",
-            "properties": {
-                "ncrna": {
-                    "type": "boolean",
-                    "description": "Generate protein database from non-coding RNA"
-                },
-                "pseudogenes": {
-                    "type": "boolean",
-                    "description": "Generate protein database from pseudogenes"
-                },
-                "altorfs": {
-                    "type": "boolean",
-                    "description": "Generate alternative ORFs from canonical proteins"
-                },
-                "ensembl": {
-                    "type": "boolean",
-                    "description": "Download ENSEMBL variants and generate protein database"
-                }
-            }
-        },
-        "custom_vcf_based_variant_proteomes": {
-            "title": "Custom VCF-based variant proteomes",
-            "type": "object",
-            "description": "Proteins generated using an input VCF",
-            "default": "",
-            "properties": {
-                "vcf": {
-                    "type": "boolean",
-                    "description": "Enable translation of a given VCF file"
-                },
-                "vcf_file": {
-                    "type": "string",
-                    "description": "VCF file path to be translated. Generate variants proteins by modifying sequences of affected transcripts."
-                },
-                "af_field": {
-                    "type": "string",
-                    "description": "Allele frequency identifier string in VCF Info column, if no AF info is given set it to empty."
-                }
-            }
-        },
-        "cbioportal_variant_proteomes": {
-            "title": "cBioportal variant proteomes",
-            "type": "object",
-            "description": "cBioportal variant parameters",
-            "default": "",
-            "properties": {
-                "cbioportal": {
-                    "type": "boolean",
-                    "description": "Download cBioPortal studies and generate protein database"
-                },
-                "cbioportal_accepted_values": {
-                    "type": "string",
-                    "default": "all",
-                    "description": "Specify a tissue type to limit the cBioPortal mutations to a particular caner type"
-                },
-                "cbioportal_filter_column": {
-                    "type": "string",
-                    "default": "CANCER_TYPE",
-                    "description": "Specify a column from the clinical sample file to be used for filtering records"
-                },
-                "cbioportal_study_id": {
-                    "type": "string",
-                    "description": "Download mutations from a specific study in cbiportal default is all which downloads mutations from all studies"
-                },
-                "cbioportal_config": {
-                    "type": "string",
-                    "description": "cBioPortal configuration file"
-                }
-            }
-        },
-        "cosmic_variant_proteomes": {
-            "title": "COSMIC variant proteomes",
-            "type": "object",
-            "description": "COSMIC variant proteins parameters",
-            "default": "",
-            "properties": {
-                "cosmic": {
-                    "type": "boolean",
-                    "description": "Download COSMIC mutation files and generate protein database"
-                },
-                "cosmic_celllines": {
-                    "type": "string",
-                    "description": "Download COSMIC cell line files and generate protein database"
-                },
-                "cosmic_user_name": {
-                    "type": "string",
-                    "description": "User name (or email) for COSMIC account"
-                },
-                "cosmic_password": {
-                    "type": "string",
-                    "description": "Password for COSMIC account"
-                },
-                "cosmic_config": {
-                    "type": "string",
-                    "description": "Path to configuration file for parameters in generating"
-                },
-                "cosmic_cancer_type": {
-                    "type": "string",
-                    "default": "all",
-                    "description": "Specify a tissue type to limit the COSMIC mutations to a particular caner type"
-                },
-                "cosmic_cellline_name": {
-                    "type": "string",
-                    "default": "all",
-                    "description": "Specify a sample name to limit the COSMIC cell line mutations to a particular  cell line"
-                }
-            }
-        },
-        "gnomad_variant_proteomes": {
-            "title": "GNOMAD variant proteomes",
-            "type": "object",
-            "description": "",
-            "default": "",
-            "properties": {
-                "gnomad": {
-                    "type": "boolean",
-                    "description": "Add gNOMAD variants to the database"
-                },
-                "gnomad_file_url": {
-                    "type": "string",
-                    "default": "gs://gnomad-public/release/2.1.1/vcf/exomes/gnomad.exomes.r2.1.1.sites.vcf.bgz",
-                    "description": "gNOMAD url"
-                }
-            }
-        },
-        "decoy_generation": {
-            "title": "Decoy generation",
-            "type": "object",
-            "description": "Generate decoy proteins and attach them to the final protein database",
-            "default": "",
-            "properties": {
-                "decoy": {
-                    "type": "boolean",
-                    "description": "Append the decoy proteins to the database"
-                },
-                "decoy_prefix": {
-                    "type": "string",
-                    "default": "Decoy_",
-                    "description": "String to be used as prefix for the generated decoy sequences"
-                },
-                "decoy_method": {
-                    "type": "string",
-                    "default": "decoypyrat",
-                    "description": "Method used to generate the decoy database",
-                    "enum": [
-                        "protein-reverse",
-                        "protein-shuffle",
-                        "decoypyrat"
-                    ]
-                },
-                "decoy_enzyme": {
-                    "type": "string",
-                    "default": "Trypsin",
-                    "description": "Enzyme used to generate the decoy"
-                },
-                "protein_decoy_config": {
-                    "type": "string",
-                    "description": "Configuration file to perform the decoy generation"
-                }
-            }
-        },
-        "clean_and_process_database": {
-            "title": "Clean and process database",
-            "type": "object",
-            "description": "Clean and process the resulted database",
-            "default": "",
-            "properties": {
-                "clean_database": {
-                    "type": "boolean",
-                    "description": "Clean the database for stop codons, short protein sequences"
-                },
-                "minimum_aa": {
-                    "type": "integer",
-                    "default": 6,
-                    "description": "Minimum number of AminoAcids for a protein to be included in the database"
-                },
-                "add_stop_codons": {
-                    "type": "boolean",
-                    "description": "If an stop codons is found, create two proteins from it"
-                }
-            }
-        },
+    "$defs": {
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
+            "required": ["outdir"],
             "properties": {
                 "outdir": {
                     "type": "string",
-                    "description": "The output directory where the results will be saved.",
-                    "default": "./results",
+                    "format": "directory-path",
+                    "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
                     "fa_icon": "fas fa-folder-open"
-                },
-                "email": {
-                    "type": "string",
-                    "description": "Email address for completion summary.",
-                    "fa_icon": "fas fa-envelope",
-                    "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
-                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
-                },
-                "final_database_protein": {
-                    "type": "string",
-                    "default": "final_proteinDB.fa",
-                    "description": "Filename for the final protein database"
                 }
             }
         },
@@ -255,27 +27,11 @@
             "description": "Less common options for the pipeline, typically set in a config file.",
             "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
             "properties": {
-                "help": {
+                "version": {
                     "type": "boolean",
-                    "description": "Display help text.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-question-circle"
-                },
-                "publish_dir_mode": {
-                    "type": "string",
-                    "default": "copy",
-                    "hidden": true,
-                    "description": "Method used to save pipeline results to output directory.",
-                    "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
-                    "fa_icon": "fas fa-copy",
-                    "enum": [
-                        "symlink",
-                        "rellink",
-                        "link",
-                        "copy",
-                        "copyNoFollow",
-                        "move"
-                    ]
+                    "description": "Display version and exit.",
+                    "fa_icon": "fas fa-question-circle",
+                    "hidden": true
                 },
                 "validate_params": {
                     "type": "boolean",
@@ -283,180 +39,342 @@
                     "default": true,
                     "fa_icon": "fas fa-check-square",
                     "hidden": true
+                }
+            }
+        },
+        "other_options": {
+            "title": "other options",
+            "type": "object",
+            "description": "input files for running the workflow.",
+            "properties": {
+                "monochrome_logs": {
+                    "type": "boolean",
+                    "description": "placeholder text"
+                },
+                "help_full": {
+                    "type": "boolean",
+                    "description": "placeholder text"
+                },
+                "show_hidden": {
+                    "type": "boolean",
+                    "description": "placeholder text"
+                },
+                "email": {
+                    "type": "string",
+                    "description": "placeholder text"
                 },
                 "email_on_fail": {
                     "type": "string",
-                    "description": "Email address for completion summary, only when pipeline fails.",
-                    "fa_icon": "fas fa-exclamation-triangle",
-                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
-                    "hidden": true,
-                    "help_text": "This works exactly as with `--email`, except emails are only sent if the workflow is not successful."
+                    "description": "placeholder text"
                 },
                 "plaintext_email": {
                     "type": "boolean",
-                    "description": "Send plain-text email instead of HTML.",
-                    "fa_icon": "fas fa-remove-format",
-                    "hidden": true,
-                    "help_text": "Set to receive plain-text e-mails instead of HTML formatted."
+                    "description": "placeholder text"
                 },
-                "max_multiqc_email_size": {
+                "hook_url": {
                     "type": "string",
-                    "description": "File size limit when attaching MultiQC reports to summary emails.",
-                    "default": "25.MB",
-                    "fa_icon": "fas fa-file-upload",
-                    "hidden": true,
-                    "help_text": "If file generated by pipeline exceeds the threshold, it will not be attached."
-                },
-                "monochrome_logs": {
-                    "type": "boolean",
-                    "description": "Do not use coloured log outputs.",
-                    "fa_icon": "fas fa-palette",
-                    "hidden": true,
-                    "help_text": "Set to disable colourful command line output and live life in monochrome."
-                },
-                "tracedir": {
-                    "type": "string",
-                    "description": "Directory to keep pipeline Nextflow logs and reports.",
-                    "default": "${params.outdir}/pipeline_info",
-                    "fa_icon": "fas fa-cogs",
-                    "hidden": true
-                },
-                "show_hidden_params": {
-                    "type": "boolean",
-                    "fa_icon": "far fa-eye-slash",
-                    "description": "Show all params when using `--help`",
-                    "hidden": true,
-                    "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
-                }
-            }
-        },
-        "max_job_request_options": {
-            "title": "Max job request options",
-            "type": "object",
-            "fa_icon": "fab fa-acquisitions-incorporated",
-            "description": "Set the top limit for requested resources for any single job.",
-            "help_text": "If you are running on a smaller system, a pipeline step requesting more resources than are available may cause the Nextflow to stop the run with an error. These options allow you to cap the maximum resources requested by any single job so that the pipeline will run on your system.\n\nNote that you can not _increase_ the resources requested by any job using these options. For that you will need your own configuration file. See [the nf-core website](https://nf-co.re/usage/configuration) for details.",
-            "properties": {
-                "max_cpus": {
-                    "type": "integer",
-                    "description": "Maximum number of CPUs that can be requested    for any single job.",
-                    "default": 16,
-                    "fa_icon": "fas fa-microchip",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the CPU requirement for each process. Should be an integer e.g. `--max_cpus 1`"
-                },
-                "max_memory": {
-                    "type": "string",
-                    "description": "Maximum amount of memory that can be requested for any single job.",
-                    "default": "128.GB",
-                    "fa_icon": "fas fa-memory",
-                    "pattern": "^[\\d\\.]+\\s*.(K|M|G|T)?B$",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the memory requirement for each process. Should be a string in the format integer-unit e.g. `--max_memory '8.GB'`"
-                },
-                "max_time": {
-                    "type": "string",
-                    "description": "Maximum amount of time that can be requested for any single job.",
-                    "default": "240.h",
-                    "fa_icon": "far fa-clock",
-                    "pattern": "^(\\d+(\\.\\d+)?(?:\\s*|\\.?)(s|m|h|d)\\s*)+$",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`"
-                }
-            }
-        },
-        "institutional_config_options": {
-            "title": "Institutional config options",
-            "type": "object",
-            "fa_icon": "fas fa-university",
-            "description": "Parameters used to describe centralised config profiles. These should not be edited.",
-            "help_text": "The centralised nf-core configuration profiles use a handful of pipeline parameters to describe themselves. This information is then printed to the Nextflow log when you run a pipeline. You should not need to change these values when you run a pipeline.",
-            "properties": {
-                "custom_config_version": {
-                    "type": "string",
-                    "description": "Git commit id for Institutional configs.",
-                    "default": "master",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog",
-                    "help_text": "Provide git commit id for custom Institutional configs hosted at `nf-core/configs`. This was implemented for reproducibility purposes. Default: `master`.\n\n```bash\n## Download and use config file with following git commit id\n--custom_config_version d52db660777c4bf36546ddb188ec530c3ada1b96\n```"
+                    "description": "placeholder text"
                 },
                 "custom_config_base": {
                     "type": "string",
-                    "description": "Base directory for Institutional configs.",
                     "default": "https://raw.githubusercontent.com/nf-core/configs/master",
-                    "hidden": true,
-                    "help_text": "If you're running offline, nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the files from the repo and tell nextflow where to find them with the `custom_config_base` option. For example:\n\n```bash\n## Download and unzip the config files\ncd /path/to/my/configs\nwget https://github.com/nf-core/configs/archive/master.zip\nunzip master.zip\n\n## Run the pipeline\ncd /path/to/my/data\nnextflow run /path/to/pipeline/ --custom_config_base /path/to/my/configs/configs-master/\n```\n\n> Note that the nf-core/tools helper package has a `download` command to download all required pipeline files + singularity containers + institutional configs in one go for you, to make this process easier.",
-                    "fa_icon": "fas fa-users-cog"
+                    "description": "placeholder text"
                 },
-                "hostnames": {
+                "custom_config_version": {
                     "type": "string",
-                    "description": "Institutional configs hostname.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
+                    "default": "master",
+                    "description": "placeholder text"
+                },
+                "igenomes_base": {
+                    "type": "string",
+                    "default": "s3://ngi-igenomes/igenomes/",
+                    "description": "placeholder text"
+                },
+                "igenomes_ignore": {
+                    "type": "boolean",
+                    "description": "placeholder text"
+                },
+                "publish_dir_mode": {
+                    "type": "string",
+                    "default": "copy",
+                    "description": "placeholder text"
+                },
+                "pipelines_testdata_base_path": {
+                    "type": "string",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/7f1614bae0ddf66e60be78c3d9fa55440465ac8/",
+                    "description": "placeholder text"
                 },
                 "config_profile_name": {
                     "type": "string",
-                    "description": "Institutional config name.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
+                    "description": "placeholder text"
                 },
                 "config_profile_description": {
                     "type": "string",
-                    "description": "Institutional config description.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
+                    "description": "placeholder text"
                 },
                 "config_profile_contact": {
                     "type": "string",
-                    "description": "Institutional config contact information.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
+                    "description": "placeholder text"
                 },
                 "config_profile_url": {
                     "type": "string",
-                    "description": "Institutional config URL link.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
+                    "description": "placeholder text"
+                }
+            }
+        },
+        "skip_options": {
+            "title": "skip_options",
+            "type": "object",
+            "description": "Paramiters that decide which processes to skip.",
+            "properties": {
+                "skip_rnaseqdb": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "option to skip the rnaseqdb workflow"
+                },
+                "skip_dnaseq": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "option to skip generating a database from cdna files generated from the sequening data"
+                },
+                "skip_vcf": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "option to skip generating a database from a vcf file based on the sequencing data"
+                },
+                "skip_ensembldb": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "option to skip the ensembldb workflow"
+                },
+                "skip_proteome": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "option to skip adding the ENSEMBL proteome data to the final database"
+                },
+                "skip_ncrna": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "option to skip database generation from non-coding rna data"
+                },
+                "skip_pseudogenes": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "option to skip database generation from pseudogene data"
+                },
+                "skip_altorfs": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "option to skip database generation from alternate reading frame data"
+                },
+                "skip_ensembl_vcf": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "option to skip database generation from an ENSEMBL vcf file"
+                },
+                "skip_cosmicdb": {
+                    "type": "boolean",
+                    "description": "option to skip the cosmicdb workflow",
+                    "default": true
+                },
+                "skip_genecodedb": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "option to skip the genecodedb workflow"
+                },
+                "skip_cbioportaldb": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "option to skip the cbioportaldb workflow"
+                },
+                "skip_additional_database": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "option to skip the addition of an additional database"
+                },
+                "skip_decoy": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "option to skip decoy generation"
+                }
+            }
+        },
+        "download_urls": {
+            "title": "download_urls",
+            "type": "object",
+            "description": "Paramiters difining which files are downloaded.",
+            "properties": {
+                "cbioportal_url": {
+                    "type": "string",
+                    "description": "placeholder text"
+                },
+                "grch38_url": {
+                    "type": "string",
+                    "default": "ftp://ftp.ensembl.org/pub/release-115/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz",
+                    "description": "Download url for the human geneome GRCh38"
+                },
+                "cosmic_genes_url": {
+                    "type": "string",
+                    "description": "download url for the COSMIC gene data"
+                },
+                "cosmic_mutations_url": {
+                    "type": "string",
+                    "description": "download url for the COSMIC mutations data"
+                },
+                "genecode_transcripts_url": {
+                    "type": "string",
+                    "description": "download url for genecode transcripts data"
+                },
+                "genecode_annotations_url": {
+                    "type": "string",
+                    "description": "download url for genecode annotation data"
+                },
+                "gnomad_url": {
+                    "type": "string",
+                    "description": "download url for gnomad vcf data"
+                }
+            }
+        },
+        "pypgatk_config_files": {
+            "title": "pypgatk_config_files",
+            "type": "object",
+            "description": "Paramiters containing the config files for running the pypgatk modules.",
+            "properties": {
+                "dna_config": {
+                    "type": "string",
+                    "default": "/exports/eddie/scratch/s2215490/proteogenomicsdb/conf/pypgatk_config_files/dna_config.yaml",
+                    "description": "config file used in the RNASEQDB workflow in the PYPGATK_DNA process"
+                },
+                "custom_config": {
+                    "type": "string",
+                    "default": "/exports/eddie/scratch/s2215490/proteogenomicsdb/conf/pypgatk_config_files/custom_config.yaml",
+                    "description": "config file used in the RNASEQDB workflow in the PYPGATK_VCF process"
+                },
+                "genecode_config": {
+                    "type": "string",
+                    "default": "/exports/eddie/scratch/s2215490/proteogenomicsdb/conf/pypgatk_config_files/genecode_config.yaml",
+                    "description": "config file used in the GENECODEDB workflow in the PYPGATK_VCF process"
+                },
+                "cbio_config": {
+                    "type": "string",
+                    "default": "/exports/eddie/scratch/s2215490/proteogenomicsdb/conf/pypgatk_config_files/cbioportal_config.yaml",
+                    "description": "config file used in the CBIOPORTALDB workflow in the PYPGATK_CBIOPORTAL process"
+                },
+                "ensembl_downloader_config": {
+                    "type": "string",
+                    "default": "/exports/eddie/scratch/s2215490/proteogenomicsdb/conf/pypgatk_config_files/ensembl_downloader_config.yaml",
+                    "description": "config file used in the ENSEMBLDB workflow in the PYPGATK_ENSEMBL_DOWNLOADER process"
+                },
+                "ensembl_config": {
+                    "type": "string",
+                    "default": "/exports/eddie/scratch/s2215490/proteogenomicsdb/conf/pypgatk_config_files/ensembl_config.yaml",
+                    "description": "config file used in the ENSEMBLDB workflow in the PYPGATK_VCF process"
+                },
+                "ncrna_config": {
+                    "type": "string",
+                    "default": "/exports/eddie/scratch/s2215490/proteogenomicsdb/conf/pypgatk_config_files/ncrna_config.yaml",
+                    "description": "config file used in the ENSEMBLDB workflow in the PYPGATK_NCRNA process"
+                },
+                "pseudogenes_config": {
+                    "type": "string",
+                    "default": "/exports/eddie/scratch/s2215490/proteogenomicsdb/conf/pypgatk_config_files/pseudogenes_config.yaml",
+                    "description": "config file used in the ENSEMBLDB workflow in the PYPGATK_PSEUDOGENES process"
+                },
+                "altorfs_config": {
+                    "type": "string",
+                    "default": "/exports/eddie/scratch/s2215490/proteogenomicsdb/conf/pypgatk_config_files/altorfs_config.yaml",
+                    "description": "config file used in the ENSEMBLDB workflow in the PYPGATK_ALTORFS process"
+                },
+                "cosmic_config": {
+                    "type": "string",
+                    "default": "/exports/eddie/scratch/s2215490/proteogenomicsdb/conf/pypgatk_config_files/cosmic_config.yaml",
+                    "description": "config file used in the COSMICDB workflow in the PYPGATK_COSMIC process"
+                },
+                "clean_config": {
+                    "type": "string",
+                    "default": "/exports/eddie/scratch/s2215490/proteogenomicsdb/conf/pypgatk_config_files/clean_config.yaml",
+                    "description": "config file used in the MERGEDB workflow in the ENSEMBL_CHECK process"
+                },
+                "decoy_config": {
+                    "type": "string",
+                    "default": "/exports/eddie/scratch/s2215490/proteogenomicsdb/conf/pypgatk_config_files/protein_decoy.yaml",
+                    "description": "config file used in the MERGEDB workflow in the PYPGATK_DECOY process"
+                }
+            }
+        },
+        "pipeline_inputs": {
+            "title": "pipeline_inputs",
+            "type": "object",
+            "description": "paramiters for inputting into the pipeline.",
+            "properties": {
+                "annotation": {
+                    "type": "string",
+                    "description": "annotation (.gtf) file for RNASEQDB"
+                },
+                "reference": {
+                    "type": "string",
+                    "description": "genome reference (.fa) file for RNASEQDB"
+                },
+                "username": {
+                    "type": "string",
+                    "description": "COSMIC username"
+                },
+                "password": {
+                    "type": "string",
+                    "description": "COSMIC password"
+                },
+                "transcripts": {
+                    "type": "string",
+                    "description": "gene transcripts (.fa) file for RNASEQDB"
+                },
+                "species_id": {
+                    "type": "string",
+                    "description": "ENSEMBL species id"
+                },
+                "cbio_study": {
+                    "type": "string",
+                    "description": "name of the cBioPortal study"
+                },
+                "faidx_get_genome_sizes": {
+                    "type": "boolean",
+                    "description": "boolean defining if the faidx should get the genome sized"
+                },
+                "additional_database": {
+                    "type": "string",
+                    "description": "Additional database to merge into final database"
+                },
+                "input": {
+                    "type": "string",
+                    "description": "sorted bam file"
+                },
+                "bam_index": {
+                    "type": "string",
+                    "description": "bam index file"
                 }
             }
         }
     },
     "allOf": [
         {
-            "$ref": "#/definitions/ensembl_canonical_proteomes"
+            "$ref": "#/$defs/input_output_options"
         },
         {
-            "$ref": "#/definitions/non_canonical_proteome_parameters"
+            "$ref": "#/$defs/generic_options"
         },
         {
-            "$ref": "#/definitions/custom_vcf_based_variant_proteomes"
+            "$ref": "#/$defs/other_options"
         },
         {
-            "$ref": "#/definitions/cbioportal_variant_proteomes"
+            "$ref": "#/$defs/skip_options"
         },
         {
-            "$ref": "#/definitions/cosmic_variant_proteomes"
+            "$ref": "#/$defs/download_urls"
         },
         {
-            "$ref": "#/definitions/gnomad_variant_proteomes"
+            "$ref": "#/$defs/pypgatk_config_files"
         },
         {
-            "$ref": "#/definitions/decoy_generation"
-        },
-        {
-            "$ref": "#/definitions/clean_and_process_database"
-        },
-        {
-            "$ref": "#/definitions/input_output_options"
-        },
-        {
-            "$ref": "#/definitions/generic_options"
-        },
-        {
-            "$ref": "#/definitions/max_job_request_options"
-        },
-        {
-            "$ref": "#/definitions/institutional_config_options"
+            "$ref": "#/$defs/pipeline_inputs"
         }
     ]
 }

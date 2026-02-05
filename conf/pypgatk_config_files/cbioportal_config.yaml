@@ -1,0 +1,13 @@
+cbioportal-to-proteindb:
+   filter_info:
+      filter_column: 'CANCER_TYPE'
+      accepted_values: "all"
+      split_by_filter_column: False
+      clinical_sample_file: ''
+logger:
+    formatters:
+      DEBUG: "%(asctime)s [%(levelname)7s][%(name)48s][%(module)32s, %(lineno)4s] %(message)s"
+      INFO: "%(asctime)s [%(levelname)7s][%(name)48s] %(message)s"
+    loglevel: DEBUG
+   
+  

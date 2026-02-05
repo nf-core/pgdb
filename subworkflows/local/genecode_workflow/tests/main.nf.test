@@ -1,0 +1,60 @@
+nextflow_workflow {
+
+    name "Test Subworkflow GENECODEDB"
+    script "../genecode_workflow.nf"
+    workflow "COSMICDB"
+    config "./nextflow.config"
+
+    test("--skip_genecodedb false") {
+
+        when {
+            workflow {
+                """
+
+                input[0]  = "https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.transcripts.fa.gz"
+                input[1]  = "https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.annotation.gtf.gz"
+                input[2]  = "gs://gcp-public-data--gnomad/release/2.1.1/vcf/exomes/gnomad.exomes.r2.1.1.sites.18.vcf.bgz"
+                input[3]  = file('$projectDir/conf/pypgatk_config_files/genecode_config.yaml', checkIfExists: true)
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.versions_ch,
+                    workflow.out.genecode_database
+                ).match() }
+            )
+        }
+    }
+
+    test("--skip_genecodedb false -stub") {
+        
+        options "stub"
+
+        when {
+            workflow {
+                """
+                input[0]  = "https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.transcripts.fa.gz"
+                input[1]  = "https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.annotation.gtf.gz"
+                input[2]  = "gs://gcp-public-data--gnomad/release/2.1.1/vcf/exomes/gnomad.exomes.r2.1.1.sites.18.vcf.bgz"
+                input[3]  = file('$projectDir/conf/pypgatk_config_files/genecode_config.yaml', checkIfExists: true)
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.versions_ch,
+                    workflow.out.genecode_database
+                ).match() }
+            )
+        }
+    }
+}

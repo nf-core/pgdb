@@ -1,0 +1,33 @@
+name: cbioportal_downloader
+description: A module for downloading files off of cbioportal
+keywords:
+  - peptide
+  - protein
+  - database
+input:
+    - cbioportal_download_url:
+        type: string
+        description: download url for the files on cbioportal
+        pattern: []
+        ontologies: []
+    - sample_id:
+        type: string
+        description: name of the cbioportal study that you want to download
+        pattern: []
+        ontologies: []
+output:
+  file_out:
+      - cbio_mutations:
+          type: file
+          description: output mutations file
+          pattern: ".txt"
+          ontologies: []
+      - cbio_samples:
+          type: file
+          description: output samples file
+          pattern: ".txt"
+          ontologies: []
+authors:
+  - "@alistairrice"
+maintainers:
+  - "@hywelldunn-davies"

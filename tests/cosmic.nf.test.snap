@@ -1,0 +1,59 @@
+{
+    "params: --skip_cosmicdb false -stub": {
+        "content": [
+            4,
+            null,
+            [
+                "cat",
+                "cat/final_database.fa",
+                "cosmic",
+                "cosmic/cosmic_genes.fasta",
+                "cosmic/cosmic_mutations.tsv",
+                "execution_report_2026-02-04_13-05-18.html",
+                "execution_timeline_2026-02-04_13-05-18.html",
+                "pipeline_dag_2026-02-04_13-05-18.html",
+                "pipeline_info",
+                "pypgatk",
+                "pypgatk/cleaned_database.fa",
+                "pypgatk/null.fa"
+            ],
+            [
+                "final_database.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "cosmic_genes.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "cosmic_mutations.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "execution_report_2026-02-04_13-05-18.html:md5,a31dc6d9ee6e80f08f648d08e7cbedc2",
+                "execution_timeline_2026-02-04_13-05-18.html:md5,0ec67bbf6d75c0782ce96ed8a8b42145",
+                "pipeline_dag_2026-02-04_13-05-18.html:md5,54cf6184c38a81451b1e352374a6026c",
+                "cleaned_database.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "null.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-04T13:06:08.425042114"
+    },
+    "params: --skip_cosmicdb false": {
+        "content": [
+            0,
+            null,
+            [
+                "execution_report_2026-02-04_13-04-54.html",
+                "execution_timeline_2026-02-04_13-04-54.html",
+                "pipeline_dag_2026-02-04_13-04-54.html",
+                "pipeline_info"
+            ],
+            [
+                "execution_report_2026-02-04_13-04-54.html:md5,1b84624ad572770f414137be7eba64ba",
+                "execution_timeline_2026-02-04_13-04-54.html:md5,a86575315fbe850b7a2ed1327262b50a",
+                "pipeline_dag_2026-02-04_13-04-54.html:md5,54cf6184c38a81451b1e352374a6026c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-04T13:05:08.714646615"
+    }
+}

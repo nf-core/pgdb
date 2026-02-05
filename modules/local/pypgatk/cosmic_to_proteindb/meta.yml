@@ -1,0 +1,62 @@
+name: pypgatk_cosmicdb
+description: A module for the generation of a peptide database from cosmic downloads
+keywords:
+  - peptide
+  - protein
+  - database
+tools:
+  - vcf-to-proteindb:
+      description: takes files downloaded from cosmic and generates a peptide database
+      documentation: https://pgatk.readthedocs.io/en/latest/pypgatk.html
+      licence: 
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'cosmic_genes' ]
+    - cosmic_genes:
+        type: file
+        description: genes input file
+        pattern: ".fa"
+        ontologies: []
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id: 'cosmic_mutations' ]
+    - cosmic_mutations:
+        type: file
+        description: mutations input files
+        pattern: ".tsv"
+        ontologies: []
+    - cosmic_config:
+        type: file
+        description: config file used to define the paramiters of the process
+        pattern: ".yaml"
+        ontologies: []
+output:
+  file_out:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id: 'output_proteindb' ]
+      - database:
+          type: file
+          description: output peptide database
+          pattern: ".fa"
+          ontologies: []
+      - versions:
+    -     versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+          ontologies:
+            - edam: http://edamontology.org/format_3750 # YAML
+
+authors:
+  - "@alistairrice"
+maintainers:
+  - "@hywelldunn-davies"

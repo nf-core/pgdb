@@ -1,0 +1,66 @@
+nextflow_pipeline {
+
+    name "Test pypgatk_ensembl_downloader"
+    script "../main.nf"
+    tag "module"
+    process "PYPGATK_ENSEMBL_DOWNLOAD"
+
+
+    test("-profile pypgatk_ensembl_downloader test") {
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+            process {
+                """
+                input[0] = Channel.of([ 
+                    file('params.ensembl_downloader_config', checkIfExists: true)
+                ])
+                input[1] = ['559292']
+
+                """
+
+            }
+        }
+
+        then {
+            assertAll(
+
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            
+            )
+        }
+    }
+
+    test("-profile pypgatk_ensembl_downloader test -stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+            process {
+                """
+                input[0] = Channel.of([ 
+                    file('params.ensembl_downloader_config', checkIfExists: true)
+                ])
+                input[1] = ['559292']
+
+                """
+
+            }
+        }
+
+        then {
+            assertAll(
+
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            
+            )
+        }
+    }
+}

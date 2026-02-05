@@ -1,0 +1,49 @@
+{
+    "params: --skip_rnaseqdb false": {
+        "content": [
+            0,
+            null,
+            [
+                "execution_report_2026-02-04_13-20-22.html",
+                "execution_timeline_2026-02-04_13-20-22.html",
+                "pipeline_dag_2026-02-04_13-20-22.html",
+                "pipeline_info"
+            ],
+            [
+                "execution_report_2026-02-04_13-20-22.html:md5,5de2ddadefa5aef4e41f2e9ac8208e2b",
+                "execution_timeline_2026-02-04_13-20-22.html:md5,404bd7b2157be35fc541656ed096fec8",
+                "pipeline_dag_2026-02-04_13-20-22.html:md5,4789683b61e40242c2b623315c6d97ae"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-04T13:20:40.690546958"
+    },
+    "params: --skip_rnaseqdb false -stub": {
+        "content": [
+            1,
+            null,
+            [
+                "execution_report_2026-02-04_13-20-50.html",
+                "execution_timeline_2026-02-04_13-20-50.html",
+                "pipeline_dag_2026-02-04_13-20-50.html",
+                "pipeline_info",
+                "samtools",
+                "samtools/Saccharomyces_cerevisiae.R64-1-1.dna.toplevel.fa.fai"
+            ],
+            [
+                "execution_report_2026-02-04_13-20-50.html:md5,a65ac75189e60878fb6ec873d09c3452",
+                "execution_timeline_2026-02-04_13-20-50.html:md5,5c7affd1756e82ce2947ec9bef7fae4d",
+                "pipeline_dag_2026-02-04_13-20-50.html:md5,4789683b61e40242c2b623315c6d97ae",
+                "Saccharomyces_cerevisiae.R64-1-1.dna.toplevel.fa.fai:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-04T13:21:03.744240916"
+    }
+}

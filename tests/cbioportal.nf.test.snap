@@ -1,0 +1,89 @@
+{
+    "params: --skip_cbioportaldb false": {
+        "content": [
+            3,
+            null,
+            [
+                "cbioportal",
+                "cbioportal/cbioportal_allstudies_data_clinical_sample.txt",
+                "cbioportal/cbioportal_allstudies_data_mutations.txt",
+                "execution_report_2026-02-04_13-02-02.html",
+                "execution_timeline_2026-02-04_13-02-02.html",
+                "gunzip",
+                "gunzip/grch38.grch38",
+                "pipeline_dag_2026-02-04_13-02-02.html",
+                "pipeline_info",
+                "wget",
+                "wget/grch38.gz"
+            ],
+            [
+                "cbioportal_allstudies_data_clinical_sample.txt:md5,4ce53453c8d794fe2ee194ca4d6ca2cf",
+                "cbioportal_allstudies_data_mutations.txt:md5,141b7dd89416015113a2f801c7b7a8be",
+                "execution_report_2026-02-04_13-02-02.html:md5,8c3f75467dbb5e202e64ad02f6aa3aef",
+                "execution_timeline_2026-02-04_13-02-02.html:md5,0c344acca3b4a79c5bb3e41fa42eafd5",
+                "grch38.grch38:md5,64ca420fd2f82bdb443f8690b950ce9e",
+                "pipeline_dag_2026-02-04_13-02-02.html:md5,2fe996eddd686e97d351b47d248b07d7",
+                "grch38.gz:md5,64ca420fd2f82bdb443f8690b950ce9e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-04T13:03:14.221288664"
+    },
+    "params: --skip_cbioportaldb false -stub": {
+        "content": [
+            6,
+            null,
+            [
+                "cat",
+                "cat/final_database.fa",
+                "cbioportal",
+                "cbioportal/cbioportal_allstudies_data_clinical_sample.txt",
+                "cbioportal/cbioportal_allstudies_data_mutations.txt",
+                "execution_report_2026-02-04_13-03-40.html",
+                "execution_timeline_2026-02-04_13-03-40.html",
+                "gunzip",
+                "gunzip/grch38.grch38",
+                "pipeline_dag_2026-02-04_13-03-40.html",
+                "pipeline_info",
+                "pypgatk",
+                "pypgatk/cbio_samples.fa",
+                "pypgatk/cleaned_database.fa",
+                "wget",
+                "wget/grch38.gz"
+            ],
+            [
+                "final_database.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "cbioportal_allstudies_data_clinical_sample.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "cbioportal_allstudies_data_mutations.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "execution_report_2026-02-04_13-03-40.html:md5,7efeb95b36f5516630ee587cd5f68384",
+                "execution_timeline_2026-02-04_13-03-40.html:md5,7477059e2358452e5a3311a8782d8fa1",
+                "grch38.grch38:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "pipeline_dag_2026-02-04_13-03-40.html:md5,2fe996eddd686e97d351b47d248b07d7",
+                "cbio_samples.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "cleaned_database.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                {
+                    "directory": false,
+                    "file": true,
+                    "freeSpace": 176680698118144,
+                    "canonicalPath": "/exports/eddie/scratch/s2215490/proteogenomicsdb/.nf-test/tests/5728af5336cc8d074a3d6dd473c1028e/output/wget/grch38.gz",
+                    "usableSpace": 176680698118144,
+                    "hidden": false,
+                    "totalSpace": 268829984817152,
+                    "path": "/exports/eddie/scratch/s2215490/proteogenomicsdb/.nf-test/tests/5728af5336cc8d074a3d6dd473c1028e/output/wget/grch38.gz",
+                    "name": "grch38.gz",
+                    "absolute": true,
+                    "absolutePath": "/exports/eddie/scratch/s2215490/proteogenomicsdb/.nf-test/tests/5728af5336cc8d074a3d6dd473c1028e/output/wget/grch38.gz",
+                    "parent": "/exports/eddie/scratch/s2215490/proteogenomicsdb/.nf-test/tests/5728af5336cc8d074a3d6dd473c1028e/output/wget"
+                }
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-04T13:04:28.062953496"
+    }
+}

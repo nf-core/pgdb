@@ -1,0 +1,16 @@
+dnaseq-to-proteindb:
+  translation_table: 1
+  exclude_biotypes: ''
+  skip_including_all_cds: False
+  include_biotypes: ''
+  num_orfs: 3
+  num_orfs_complement: 0
+  expression_str: ''
+  expression_thresh: 5.0
+  var_prefix: ''
+  proteindb_output_file: 'dna_peptide_database.fa'
+  logger:
+    formatters:
+      DEBUG: "%(asctime)s [%(levelname)7s][%(name)48s][%(module)32s, %(lineno)4s] %(message)s"
+      INFO: "%(asctime)s [%(levelname)7s][%(name)48s] %(message)s"
+    loglevel: DEBUG

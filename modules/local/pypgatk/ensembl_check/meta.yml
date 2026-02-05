@@ -1,0 +1,52 @@
+name: pypgatk_clean
+description: A module for cleaning up peptide databases
+keywords:
+  - peptide
+  - protein
+  - database
+tools:
+  - ensembl_check:
+      description: fixes protein sequences to only contain amino acid sequences
+      documentation: https://pgatk.readthedocs.io/en/latest/pypgatk.html
+      licence: 
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'database' ]
+    - database:
+        type: file
+        description: input database to be cleaned
+        pattern: ".fa"
+        ontologies: []
+    - clean_config:
+        type: file
+        description: config file used to define the paramiters of the process
+        pattern: ".yaml"
+        ontologies: []
+output:
+  file_out:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id: 'output_proteindb' ]
+      - database:
+          type: file
+          description: output peptide database
+          pattern: ".fa"
+          ontologies: []
+      - versions:
+    -     versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+          ontologies:
+            - edam: http://edamontology.org/format_3750 # YAML
+
+authors:
+  - "@alistairrice"
+maintainers:
+  - "@hywelldunn-davies"

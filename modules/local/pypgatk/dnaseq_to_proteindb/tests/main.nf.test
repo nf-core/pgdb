@@ -1,0 +1,73 @@
+nextflow_pipeline {
+
+    name "Test pypgatk_dna"
+    script "../main.nf"
+    tag "module"
+    process "PYPGATK_DNA"
+
+    test("-profile pypgatk_dna test") {
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id: 'sequences' ], 
+                    file('$projectDir/assets/test_files/cosmicdb/Saccharomyces_cerevisiae.R64-1-1.cdn.all.fa', checkIfExists: true)
+                
+                input[1] = Channel.of([
+                    file('params.dna_config', checkIfExists: true)
+                ])
+
+                """
+tuple val(meta), path(file)
+    path pypgatk_config
+            }
+        }
+
+        then {
+            assertAll(
+
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            
+            )
+        }
+    }
+
+    test("-profile pypgatk_dna test -stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id: 'sequences' ], 
+                    file('$projectDir/assets/test_files/cosmicdb/Saccharomyces_cerevisiae.R64-1-1.cdn.all.fa, checkIfExists: true')
+                
+                input[1] = Channel.of([
+                    file('params.dna_config, checkIfExists: true')
+                ])
+
+                """
+tuple val(meta), path(file)
+    path pypgatk_config
+            }
+        }
+
+        then {
+            assertAll(
+
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            
+            )
+        }
+    }
+}

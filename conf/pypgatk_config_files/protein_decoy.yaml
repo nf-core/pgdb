@@ -1,0 +1,26 @@
+proteindb_decoy:
+  output: protein-decoy.fa
+  method: protein-reverse
+  enzyme: Trypsin
+  cleavage_position: c
+  cleavage_sites: KR
+  anti_cleavage_sites: ''
+  min_peptide_length: 6
+  max_peptide_length: 100
+  max_missed_cleavages: 0
+  max_iterations: 100
+  do_not_shuffle: False
+  keep_target_hits: False
+  do_not_switch: False
+  decoy_prefix: DECOY_
+  temp_file: tmp.fa
+  no_isobaric: False
+  memory_save: False
+  logger:
+    formatters:
+      DEBUG: "%(asctime)s [%(levelname)7s][%(name)48s][%(module)32s, %(lineno)4s] %(message)s"
+      INFO: "%(asctime)s [%(levelname)7s][%(name)48s] %(message)s"
+    loglevel: DEBUG
+
+    
+

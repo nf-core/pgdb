@@ -1,0 +1,66 @@
+nextflow_pipeline {
+
+    name "Test cbioportal_downloader"
+    script "../main.nf"
+    tag "module"
+    process "CBIOPORTAL_DOWNLOADER"
+
+    test("-profile cbioportal_downloader test") {
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+            process {
+                """
+                input[0] = ["https://datahub.assets.cbioportal.org/es_iocurie_2014.tar.gz"]
+                input[1] = ['es_iocurie_2014']
+
+                """
+
+                val cbioportal_download_url
+
+            }
+        }
+
+        then {
+            assertAll(
+
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            
+            )
+        }
+    }
+
+    test("-profile cbioportal_downloader test -stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+            process {
+                """
+                input[0] = ["https://datahub.assets.cbioportal.org/es_iocurie_2014.tar.gz"]
+                input[1] = ['es_iocurie_2014']
+
+                """
+
+                val cbioportal_download_url
+
+            }
+        }
+
+        then {
+            assertAll(
+
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            
+            )
+        }
+    }
+
+}

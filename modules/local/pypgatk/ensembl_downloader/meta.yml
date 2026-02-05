@@ -1,0 +1,69 @@
+name: pypgatk_ensembl_downloader
+description: A module for downloading files off of the ensembl database
+keywords:
+  - peptide
+  - vcf
+  - fasta
+  - ncrna
+  - cdna
+tools:
+  - ensembl_downloader:
+      description: downloads files off of the ensembl database
+      documentation: https://pgatk.readthedocs.io/en/latest/pypgatk.html
+      licence: 
+      identifier: ""
+input:
+    - ensembl_downloader_config:
+        type: file
+        description: config file used to define the paramiters of the process
+        pattern: ".yaml"
+        ontologies: []
+    - species_taxonomy:
+        type: string
+        description: identifier of the species that you want to download
+        pattern: []
+        ontologies: []
+output:
+  file_out:
+      - protein:
+          type: file
+          description: output protein sequences
+          pattern: ".pep.all.fa"
+          ontologies: []
+      - cdna:
+          type: file
+          description: output cdna files
+          pattern: "cdna.all.fa"
+          ontologies: []
+      - ncrna:
+          type: file
+          description: output ncrna files
+          pattern: "ncrna.fa"
+          ontologies: []
+      - fasta:
+          type: file
+          description: output dna files
+          pattern: "*.dna*.fa"
+          ontologies: []
+      - gtf:
+          type: file
+          description: output gtf files
+          pattern: ".gtf"
+          ontologies: []
+      - vcf:
+          type: file
+          description: output vcf files
+          pattern: ".vcf"
+          ontologies: []
+      - versions:
+          versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+          ontologies:
+            - edam: http://edamontology.org/format_3750 # YAML
+
+authors:
+  - "@alistairrice"
+maintainers:
+  - "@hywelldunn-davies"

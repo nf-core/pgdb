@@ -1,0 +1,62 @@
+{
+    "params: --skip_ensembl false": {
+        "content": [
+            0,
+            null,
+            [
+                "execution_report_2026-02-04_13-07-00.html",
+                "execution_timeline_2026-02-04_13-07-00.html",
+                "pipeline_dag_2026-02-04_13-07-00.html",
+                "pipeline_info"
+            ],
+            [
+                "execution_report_2026-02-04_13-07-00.html:md5,e5672d7b19f8c9662e49be2d16e61ff8",
+                "execution_timeline_2026-02-04_13-07-00.html:md5,7e286732644f85dd2a115251af29f750",
+                "pipeline_dag_2026-02-04_13-07-00.html:md5,7b0122074940767d6250b1951bee74af"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-04T13:07:27.211075538"
+    },
+    "params: --skip_ensembl false -stub": {
+        "content": [
+            2,
+            null,
+            [
+                "cat",
+                "cat/Total_cDNA.fa",
+                "execution_report_2026-02-04_13-07-36.html",
+                "execution_timeline_2026-02-04_13-07-36.html",
+                "pipeline_dag_2026-02-04_13-07-36.html",
+                "pipeline_info",
+                "pypgatk",
+                "pypgatk/ensembl.dna_test.fa",
+                "pypgatk/ensembl.gtf",
+                "pypgatk/ensembl.pep.all.fa",
+                "pypgatk/ensembl.vcf",
+                "pypgatk/ensembl_cdna.all.fa",
+                "pypgatk/ensembl_ncrna.fa"
+            ],
+            [
+                "Total_cDNA.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "execution_report_2026-02-04_13-07-36.html:md5,6990d0eeb530f9ac1428c961c7787074",
+                "execution_timeline_2026-02-04_13-07-36.html:md5,173339a65de601316ce36ad1f87bf810",
+                "pipeline_dag_2026-02-04_13-07-36.html:md5,7b0122074940767d6250b1951bee74af",
+                "ensembl.dna_test.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "ensembl.gtf:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "ensembl.pep.all.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "ensembl.vcf:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "ensembl_cdna.all.fa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "ensembl_ncrna.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-04T13:08:02.535320703"
+    }
+}

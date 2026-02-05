@@ -1,0 +1,53 @@
+name: pypgatk_dna
+description: A module for the generation of a peptide database from a fasta sequences
+keywords:
+  - peptide
+  - protein
+  - vcf
+  - database
+tools:
+  - dnaseq-to-proteindb:
+      description: takes a fasta input file and generates a peptide database
+      documentation: https://pgatk.readthedocs.io/en/latest/pypgatk.html
+      licence: 
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'sequences' ]
+    - dna:
+        type: file
+        description: dna sequences
+        pattern: ".fa,.fasta,.fna"
+        ontologies: []
+    - config:
+        type: file
+        description: config file used to define the paramiters of the process
+        pattern: ".yaml"
+        ontologies: []
+output:
+  file_out:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id: 'output_proteindb' ]
+      - database:
+          type: file
+          description: output peptide database
+          pattern: ".fa"
+          ontologies: []
+      - versions:
+    -     versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+          ontologies:
+            - edam: http://edamontology.org/format_3750 # YAML
+
+authors:
+  - "@alistairrice"
+maintainers:
+  - "@hywelldunn-davies"

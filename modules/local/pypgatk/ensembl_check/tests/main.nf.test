@@ -1,0 +1,71 @@
+nextflow_pipeline {
+
+    name "Test pypgatk_clean"
+    script "../main.nf"
+    tag "module"
+    process "PYPGATK_CLEAN"
+
+test("-profile pypgatk_clean test") {
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id: 'database' ], 
+                    file('$projectDir/assets/test_files/mergedb/ensembl_vcf.fa', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    file('params.clean_config', checkIfExists: true)
+                ])
+
+                """
+
+            }
+        }
+
+        then {
+            assertAll(
+
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            
+            )
+        }
+    }
+
+    test("-profile pypgatk_clean test -stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id: 'database' ], 
+                    file('$projectDir/assets/test_files/mergedb/ensembl_vcf.fa', checkIfExists: true)
+                ])
+                input[1] = Channel.of([
+                    file('params.clean_config', checkIfExists: true)
+                ])
+
+                """
+
+            }
+        }
+
+        then {
+            assertAll(
+
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            
+            )
+        }
+    }
+}

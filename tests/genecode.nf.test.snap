@@ -1,0 +1,46 @@
+{
+    "params: --skip_gnomaddb false": {
+        "content": [
+            0,
+            null,
+            [
+                "execution_report_2026-01-26_14-55-21.html",
+                "execution_timeline_2026-01-26_14-55-21.html",
+                "pipeline_dag_2026-01-26_14-55-21.html",
+                "pipeline_info"
+            ],
+            [
+                "execution_report_2026-01-26_14-55-21.html:md5,d802a2d4a49260583518a6e3bd2d00f3",
+                "execution_timeline_2026-01-26_14-55-21.html:md5,d85097e29c3d04f3e2af8dc6ba618caa",
+                "pipeline_dag_2026-01-26_14-55-21.html:md5,a59fae3083d3d07ae6dd481de1a9a080"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-01-26T14:55:34.600513682"
+    },
+    "params: --skip_gnomaddb false -stub": {
+        "content": [
+            0,
+            null,
+            [
+                "execution_report_2026-01-26_14-55-44.html",
+                "execution_timeline_2026-01-26_14-55-44.html",
+                "pipeline_dag_2026-01-26_14-55-44.html",
+                "pipeline_info"
+            ],
+            [
+                "execution_report_2026-01-26_14-55-44.html:md5,3a29dbf18119c0a42d99473e1a53c703",
+                "execution_timeline_2026-01-26_14-55-44.html:md5,5a4a2aa32c48182c1900a11061c50ff3",
+                "pipeline_dag_2026-01-26_14-55-44.html:md5,a59fae3083d3d07ae6dd481de1a9a080"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-01-26T14:55:57.447667917"
+    }
+}

@@ -1,0 +1,63 @@
+name: cosmic_downloader
+description: A module for downloading files off of cosmic
+keywords:
+  - peptide
+  - protein
+  - database
+input:
+    - username:
+        type: string
+        description: username for COSMIC
+        pattern: []
+        ontologies: []
+    - password:
+        type: string
+        description: password for COSMIC
+        pattern: []
+        ontologies: []
+    - download_url_genes:
+        type: string
+        description: download url for the cosmic genes file
+        pattern: []
+        ontologies: []
+    - download_url_mutants:
+        type: string
+        description: download url for the cosmic mutations file
+        pattern: []
+        ontologies: []
+    - download_url_celllines_genes:
+        type: string
+        description: download url for the cosmic celllines genes file
+        pattern: []
+        ontologies: []
+    - download_url_celllines_mutants:
+        type: string
+        description: download url for the cosmic celllines mutations file
+        pattern: []
+        ontologies: []
+output:
+  file_out:
+      - cosmic_genes:
+          type: file
+          description: output cosmic genes file
+          pattern: ".tsv"
+          ontologies: []
+      - cosmic_mutants:
+          type: file
+          description: output cosmic mutations file
+          pattern: ".tsv"
+          ontologies: []
+      - cosmic_celllines_genes:
+          type: file
+          description: output cosmic celllines genes file
+          pattern: ".tsv"
+          ontologies: []
+      - cosmic_celllines_mutants:
+          type: file
+          description: output cosmic celllines mutations file
+          pattern: ".tsv"
+          ontologies: []
+authors:
+  - "@alistairrice"
+maintainers:
+  - "@hywelldunn-davies"

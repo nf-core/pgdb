@@ -1,0 +1,73 @@
+name: pypgatk_vcf
+description: A module for the generation of a peptide database from a vcf file
+keywords:
+  - peptide
+  - protein
+  - vcf
+  - database
+tools:
+  - vcf-to-proteindb:
+      description: takes a vcf input file and generates a peptide database
+      documentation: https://pgatk.readthedocs.io/en/latest/pypgatk.html
+      licence: 
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'vcf_file' ]
+    - vcf:
+        type: file
+        description: vcf_file input
+        pattern: ".vcf"
+        ontologies: []
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id: 'gtf_file' ]
+    - gtf:
+        type: file
+        description: genome annotation file used in combination with the vcf to generate a peptide database
+        pattern: ".gtf"
+        ontologies: []
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id: 'transcripts' ]
+    - fasta:
+        type: file
+        description: transcripts file used in combination with the vcf to generate a peptide database
+        pattern: ".fa,.fasta,.fna"
+        ontologies: []
+    - config:
+        type: file
+        description: config file used to define the paramiters of the process
+        pattern: ".yaml"
+        ontologies: []
+output:
+  file_out:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id: 'output_proteindb' ]
+      - database:
+          type: file
+          description: output peptide database
+          pattern: ".fa"
+          ontologies: []
+      - versions:
+    -     versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+          ontologies:
+            - edam: http://edamontology.org/format_3750 # YAML
+
+authors:
+  - "@alistairrice"
+maintainers:
+  - "@hywelldunn-davies"
